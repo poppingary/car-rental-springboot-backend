@@ -1,26 +1,37 @@
 package agk.wow.carrental.model;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "agk_user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class UserDao {
+@Table(name = "agk_user")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long id;
 
-    @Column(name = "first_name")
+    @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
-    @Column(name = "last_name")
+    @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
+    @Column(unique = true, nullable = false, length = 45)
     private String email;
 
     @Column
-    @JsonIgnore
     private String password;
+
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "agk_user_role",
+//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
+//    )
+//    private Set<Role> roles;
+    @OneToMany(mappedBy = "user")
+    private Set<UserRole> map;
 
     public long getId() {
         return id;
@@ -60,5 +71,13 @@ public class UserDao {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<UserRole> getMap() {
+        return map;
+    }
+
+    public void setMap(Set<UserRole> map) {
+        this.map = map;
     }
 }

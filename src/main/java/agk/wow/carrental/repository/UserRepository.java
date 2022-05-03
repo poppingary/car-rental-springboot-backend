@@ -1,8 +1,8 @@
 package agk.wow.carrental.repository;
 
-import agk.wow.carrental.model.UserDao;
+import agk.wow.carrental.model.User;
 import org.springframework.data.repository.CrudRepository;
 
-public interface UserRepository extends CrudRepository<UserDao, Integer> {
-    UserDao findByEmail(String email);
+public interface UserRepository extends CrudRepository<User, Integer> {
+    User findByEmail(String email);
 }

@@ -27,12 +27,12 @@ public class UserController {
 	private UserService userService;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity<?> register(@RequestBody UserDto user) {
+	public ResponseEntity register(@RequestBody UserDto user) {
 		return ResponseEntity.ok(this.userService.save(user));
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest) throws Exception {
+	public ResponseEntity login(@RequestBody JwtRequest jwtRequest) throws Exception {
 		String email = jwtRequest.getEmail();
 		String password = jwtRequest.getPassword();
 
