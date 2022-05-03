@@ -3,8 +3,8 @@ package agk.wow.carrental.controller;
 import agk.wow.carrental.config.TokenUtil;
 import agk.wow.carrental.model.JwtRequest;
 import agk.wow.carrental.model.JwtResponse;
-import agk.wow.carrental.model.UserDto;
-import agk.wow.carrental.service.UserService;
+import agk.wow.carrental.model.EmployeeDto;
+import agk.wow.carrental.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
-public class UserController {
+@RequestMapping("employee")
+public class EmployeeController {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -24,11 +25,11 @@ public class UserController {
 	private TokenUtil tokenUtil;
 
 	@Autowired
-	private UserService userService;
+	private EmployeeService employeeService;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity register(@RequestBody UserDto user) {
-		return ResponseEntity.ok(this.userService.save(user));
+	public ResponseEntity register(@RequestBody EmployeeDto user) {
+		return ResponseEntity.ok(this.employeeService.save(user));
 	}
 
 	@PostMapping(value = "/login")
@@ -37,8 +38,7 @@ public class UserController {
 		String password = jwtRequest.getPassword();
 
 		this.authenticate(email, password);
-		UserDetails userDetails = this.userService.loadUserByUsername(email);
-		String token = this.tokenUtil.generateToken(userDetails);
+		String token = this.tokenUtil.generateToken(email);
 
 		return ResponseEntity.ok(new JwtResponse(token));
 	}

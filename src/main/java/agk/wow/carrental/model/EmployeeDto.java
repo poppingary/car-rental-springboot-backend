@@ -1,6 +1,6 @@
 package agk.wow.carrental.model;
 
-public class UserDto {
+public class EmployeeDto {
     private String firstName;
     private String lastName;
     private String email;

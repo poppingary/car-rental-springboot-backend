@@ -20,40 +20,9 @@ public class TokenUtil implements Serializable {
 	@Value("${jwt.secret}")
 	private String secret;
 
-	public String getUsernameFromToken(String token) {
-		return getClaimFromToken(token, Claims::getSubject);
-	}
-
-	public Date getIssuedAtDateFromToken(String token) {
-		return getClaimFromToken(token, Claims::getIssuedAt);
-	}
-
-	public Date getExpirationDateFromToken(String token) {
-		return getClaimFromToken(token, Claims::getExpiration);
-	}
-
-	public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
-		final Claims claims = getAllClaimsFromToken(token);
-		return claimsResolver.apply(claims);
-	}
-
-	private Claims getAllClaimsFromToken(String token) {
-		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-	}
-
-	private Boolean isTokenExpired(String token) {
-		final Date expiration = getExpirationDateFromToken(token);
-		return expiration.before(new Date());
-	}
-
-	private Boolean ignoreTokenExpiration(String token) {
-		// here you specify tokens, for that the expiration is ignored
-		return false;
-	}
-
-	public String generateToken(UserDetails userDetails) {
+	public String generateToken(String email) {
 		Map<String, Object> claims = new HashMap<>();
-		return doGenerateToken(claims, userDetails.getUsername());
+		return doGenerateToken(claims, email);
 	}
 
 	private String doGenerateToken(Map<String, Object> claims, String subject) {
@@ -65,12 +34,40 @@ public class TokenUtil implements Serializable {
 				.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
 
-	public Boolean canTokenBeRefreshed(String token) {
-		return (!isTokenExpired(token) || ignoreTokenExpiration(token));
+	public String getUsernameFromToken(String token) {
+		return this.getClaimFromToken(token, Claims::getSubject);
 	}
 
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+	public Boolean isTokenExpired(String token) {
+		Date expiration = this.getExpirationDateFromToken(token);
+
+		return expiration.before(new Date());
+	}
+
+	private Date getExpirationDateFromToken(String token) {
+		return this.getClaimFromToken(token, Claims::getExpiration);
+	}
+
+	private <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
+		Claims claims = getAllClaimsFromToken(token);
+
+		return claimsResolver.apply(claims);
+	}
+
+	private Date getIssuedAtDateFromToken(String token) {
+		return getClaimFromToken(token, Claims::getIssuedAt);
+	}
+
+	private Claims getAllClaimsFromToken(String token) {
+		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
+	}
+
+	private Boolean ignoreTokenExpiration(String token) {
+		// here you specify tokens, for that the expiration is ignored
+		return false;
+	}
+
+	private Boolean canTokenBeRefreshed(String token) {
+		return (!isTokenExpired(token) || ignoreTokenExpiration(token));
 	}
 }

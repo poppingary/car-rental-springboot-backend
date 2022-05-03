@@ -1,7 +1,10 @@
 package agk.wow.carrental.config;
 
-import agk.wow.carrental.service.UserService;
+import agk.wow.carrental.LoadDatabase;
+import agk.wow.carrental.service.EmployeeService;
 import io.jsonwebtoken.ExpiredJwtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,10 +21,11 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
+	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
 	private static final String WORDS_START_WITH = "Bearer ";
 
 	@Autowired
-	private UserService userService;
+	private EmployeeService employeeService;
 
 	@Autowired
 	private TokenUtil tokenUtil;
@@ -44,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		if (headerAuthorization != null && headerAuthorization.startsWith(WORDS_START_WITH)) {
 			token = headerAuthorization.substring(7);
 		} else {
-			logger.warn("JWT Token does not begin with Bearer String");
+			log.info("JWT Token does not begin with Bearer String");
 		}
 
 		return token;
@@ -56,9 +60,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		try {
 			username = this.tokenUtil.getUsernameFromToken(token);
 		} catch (IllegalArgumentException e) {
-			System.out.println("Unable to get JWT Token");
+			log.info("Unable to get JWT Token");
 		} catch (ExpiredJwtException e) {
-			System.out.println("JWT Token has expired");
+			log.info("JWT Token has expired");
 		}
 
 		return username;
@@ -69,12 +73,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		UserDetails userDetails = this.userService.loadUserByUsername(username);
-
-		if (this.tokenUtil.validateToken(token, userDetails)) {
-			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-			usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-			SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+		if (this.tokenUtil.isTokenExpired(token)) {
+			return;
 		}
+
+		UserDetails userDetails = this.employeeService.loadUserByUsername(username);
+		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+		usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 	}
 }
