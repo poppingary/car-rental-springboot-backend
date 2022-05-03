@@ -23,13 +23,6 @@ public class User {
     @Column
     private String password;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//    @JoinTable(
-//            name = "agk_user_role",
-//            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id")
-//    )
-//    private Set<Role> roles;
     @OneToMany(mappedBy = "user")
     private Set<UserRole> map;
 
