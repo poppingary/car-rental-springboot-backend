@@ -16,6 +16,11 @@ public class ResponseBody<T> implements Serializable {
         this.message = message;
     }
 
+    public ResponseBody(String message, T data) {
+        this.message = message;
+        this.data = data;
+    }
+
     public static ResponseBody FAIL(String message) {
         return new ResponseBody(message);
     }
