@@ -1,16 +1,17 @@
 package agk.wow.carrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity(name = "agk_employee")
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "employee_id")
-    private long employeeId;
+    private String id;
 
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
@@ -33,7 +34,8 @@ public class Employee {
 
     }
 
-    public Employee(String firstName, String lastName, String email, String password, String role) {
+    public Employee(String id, String firstName, String lastName, String email, String password, String role) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -41,12 +43,12 @@ public class Employee {
         this.role = role;
     }
 
-    public long getEmployeeId() {
-        return employeeId;
+    public String getId() {
+        return id;
     }
 
-    public void setEmployeeId(long employeeId) {
-        this.employeeId = employeeId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -91,7 +93,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return "Employee{" + "id=" + this.employeeId +
+        return "Employee{" + "id=" + this.id +
                 ", first name='" + this.firstName +
                 "', last name='" + this.lastName +
                 "', email='" + this.email + '\'' +

@@ -1,5 +1,6 @@
 package agk.wow.carrental;
 
+import agk.wow.carrental.config.UUIDUtil;
 import agk.wow.carrental.model.Employee;
 import agk.wow.carrental.repository.EmployeeRepository;
 
@@ -21,7 +22,7 @@ public class LoadDatabase {
         return args -> {
             if (ObjectUtils.isEmpty(employeeRepository.findByEmail("lbj@wow.com"))) {
                 log.info("Preloading data ");
-                log.info(employeeRepository.save(new Employee("Lebron",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), "Manager")).toString());
+                log.info(employeeRepository.save(new Employee(UUIDUtil.getUUID(), "Lebron",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), "Manager")).toString());
             }
         };
     }

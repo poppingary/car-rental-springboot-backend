@@ -1,6 +1,7 @@
 package agk.wow.carrental.controller;
 
 import agk.wow.carrental.config.TokenUtil;
+import agk.wow.carrental.constant.UserType;
 import agk.wow.carrental.model.EmployeeDto;
 import agk.wow.carrental.model.JwtRequest;
 import agk.wow.carrental.model.JwtResponse;
@@ -18,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("employee")
 public class EmployeeController {
-	private static final String EMPLOYEE = "Employee";
-
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -31,7 +30,7 @@ public class EmployeeController {
 
 	@PostMapping(value = "/register")
 	public ResponseEntity register(@RequestBody EmployeeDto employeeDto) {
-		return ResponseEntity.ok(this.userService.save(employeeDto, EMPLOYEE));
+		return this.userService.register(employeeDto, UserType.EMPLOYEE);
 	}
 
 	@PostMapping(value = "/login")

@@ -21,8 +21,9 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-	private static final Logger log = LoggerFactory.getLogger(LoadDatabase.class);
-	private static final String WORDS_START_WITH = "Bearer ";
+	private static final Logger log = LoggerFactory.getLogger(JwtRequestFilter.class);
+	public static final String AUTH_HEADER_KEY = "Authorization";
+	private static final String TOKEN_PREFIX = "Bearer ";
 
 	@Autowired
 	private UserService userService;
@@ -32,9 +33,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		String headerAuthorization = request.getHeader("Authorization");
+		String header = request.getHeader(AUTH_HEADER_KEY);
 
-		String jwtToken = this.getJwtTokenFromHeader(headerAuthorization);
+		String jwtToken = this.getJwtTokenFromHeader(header);
 		String username = this.getUsername(jwtToken);
 
 		setUserAuthenticationToSpringSecurity(request, jwtToken, username);
@@ -42,11 +43,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		chain.doFilter(request, response);
 	}
 
-	private String getJwtTokenFromHeader(String headerAuthorization) {
+	private String getJwtTokenFromHeader(String header) {
 		String token = null;
 
-		if (headerAuthorization != null && headerAuthorization.startsWith(WORDS_START_WITH)) {
-			token = headerAuthorization.substring(7);
+		if (header != null && header.startsWith(TOKEN_PREFIX)) {
+			token = header.substring(7);
 		} else {
 			log.info("JWT Token does not begin with Bearer String");
 		}

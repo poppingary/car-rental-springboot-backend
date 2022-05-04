@@ -1,12 +1,14 @@
 package agk.wow.carrental.controller;
 
 import agk.wow.carrental.config.TokenUtil;
+import agk.wow.carrental.constant.UserType;
 import agk.wow.carrental.model.CustomerDto;
 import agk.wow.carrental.model.JwtRequest;
 import agk.wow.carrental.model.JwtResponse;
 import agk.wow.carrental.model.UserDto;
 import agk.wow.carrental.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,8 +20,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("customer")
 public class CustomerController {
-    private static final String CUSTOMER = "Customer";
-
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -31,7 +31,7 @@ public class CustomerController {
 
     @PostMapping(value = "/register")
     public ResponseEntity register(@RequestBody CustomerDto customerDto) {
-        return ResponseEntity.ok(this.userService.save(customerDto, CUSTOMER));
+        return this.userService.register(customerDto, UserType.CUSTOMER);
     }
 
     @PostMapping(value = "/login")

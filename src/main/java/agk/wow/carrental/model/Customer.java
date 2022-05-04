@@ -1,15 +1,17 @@
 package agk.wow.carrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 @Entity(name = "agk_customer")
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "customer_id")
-    private long customerId;
+    private String id;
 
     @Column(unique = true, nullable = false, length = 50)
     private String email;
@@ -55,12 +57,12 @@ public class Customer {
     @JoinColumn(name = "registration_number")
     private Corporate corporate;
 
-    public long getCustomerId() {
-        return customerId;
+    public String getId() {
+        return id;
     }
 
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {

@@ -1,9 +1,15 @@
 package agk.wow.carrental.service;
 
+import agk.wow.carrental.constant.ResponseBodyMessage;
+import agk.wow.carrental.constant.UserType;
 import agk.wow.carrental.model.*;
 import agk.wow.carrental.repository.CustomerRepository;
 import agk.wow.carrental.repository.EmployeeRepository;
+import agk.wow.carrental.rpcdomain.ResponseBody;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +22,6 @@ import java.util.ArrayList;
 
 @Service
 public class UserService implements UserDetailsService {
-	private static final String CUSTOMER = "Customer";
-	private static final String EMPLOYEE = "Employee";
-
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
 
@@ -28,40 +31,39 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private EmployeeRepository employeeRepository;
 
-	public Employee save(UserDto userDto, String user) {
-		if (user.equals(CUSTOMER)) {
-			CustomerDto customerDto = (CustomerDto) userDto;
-			Customer newCustomer = new Customer();
+	public ResponseEntity register(UserDto userDto, UserType userType) {
+		switch(userType) {
+			case CUSTOMER:
+				CustomerDto customerDto = (CustomerDto) userDto;
+				Customer newCustomer = new Customer();
+				BeanUtils.copyProperties(customerDto, newCustomer);
 
-			newCustomer.setEmail(customerDto.getEmail());
-			newCustomer.setPassword(bcryptEncoder.encode(customerDto.getPassword()));
-			newCustomer.setPhoneNumber(customerDto.getPhoneNumber());
-			newCustomer.setStreet(customerDto.getStreet());
-			newCustomer.setCity(customerDto.getCity());
-			newCustomer.setState(customerDto.getState());
-			newCustomer.setZipcode(customerDto.getZipcode());
-			newCustomer.setFirstName(customerDto.getFirstName());
-			newCustomer.setLastName(customerDto.getLastName());
+				if (isCustomerRegistered(newCustomer)) {
+					return new ResponseEntity(new ResponseBody(ResponseBodyMessage.USER_IS_REGISTERED.getMessage()), HttpStatus.BAD_REQUEST);
+				}
+				this.customerRepository.save(newCustomer);
+				break;
+			case EMPLOYEE:
+				EmployeeDto employeeDto = (EmployeeDto) userDto;
+				Employee newEmployee = new Employee();
+				BeanUtils.copyProperties(employeeDto, newEmployee);
 
-			Customer individualCustomer = this.customerRepository.save(newCustomer);
-			Employee employee = new Employee();
-			employee.setFirstName(individualCustomer.getFirstName());
-			employee.setLastName(individualCustomer.getLastName());
-			employee.setEmail(individualCustomer.getEmail());
-
-			return employee;
-		} else {
-			EmployeeDto employeeDto = (EmployeeDto) userDto;
-			Employee newEmployee = new Employee();
-
-			newEmployee.setFirstName(employeeDto.getFirstName());
-			newEmployee.setLastName(employeeDto.getLastName());
-			newEmployee.setEmail(employeeDto.getEmail());
-			newEmployee.setPassword(bcryptEncoder.encode(employeeDto.getPassword()));
-			newEmployee.setRole(EMPLOYEE);
-
-			return this.employeeRepository.save(newEmployee);
+				if (isEmployeeRegistered(newEmployee)) {
+					return new ResponseEntity(new ResponseBody(ResponseBodyMessage.USER_IS_REGISTERED.getMessage()), HttpStatus.BAD_REQUEST);
+				}
+				this.employeeRepository.save(newEmployee);
+				break;
 		}
+
+		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+	}
+
+	private boolean isCustomerRegistered(Customer customer) {
+		return !ObjectUtils.isEmpty(this.customerRepository.findByEmail(customer.getEmail()));
+	}
+
+	private boolean isEmployeeRegistered(Employee employee) {
+		return !ObjectUtils.isEmpty(this.employeeRepository.findByEmail(employee.getEmail()));
 	}
 
 	@Override

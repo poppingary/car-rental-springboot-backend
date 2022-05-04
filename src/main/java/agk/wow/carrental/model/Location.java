@@ -1,13 +1,16 @@
 package agk.wow.carrental.model;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
 @Entity(name = "agk_location")
 public class Location {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "location_id")
-    private Long locationId;
+    private String locationId;
 
     @Column(name = "location_name", unique = true, nullable = false, length = 30)
     private String locationName;
@@ -27,11 +30,11 @@ public class Location {
     @Column(nullable = false, length = 10)
     private String zipcode;
 
-    public Long getLocationId() {
+    public String getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(Long locationId) {
+    public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
 
