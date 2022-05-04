@@ -41,7 +41,7 @@ public class Customer {
     @Column(name = "last_name", length = 20)
     private String lastName;
 
-    @Column(name = "insurance_company", length = 20)
+    @Column(name = "insurance_company", length = 50)
     private String insuranceCompany;
 
     @Column(name = "insurance_number", length = 20)

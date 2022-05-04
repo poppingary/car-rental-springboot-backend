@@ -1,7 +1,5 @@
 package agk.wow.carrental.rpcdomain.request;
 
-import agk.wow.carrental.rpcdomain.request.RegisterRequest;
-
 public class CustomerRegisterRequest extends RegisterRequest {
     private String middleName;
     private String phoneNumber;
@@ -9,6 +7,9 @@ public class CustomerRegisterRequest extends RegisterRequest {
     private String city;
     private String state;
     private String zipcode;
+    private String insuranceCompany;
+    private String insuranceNumber;
+    private String driverLicense;
 
     public String getMiddleName() {
         return middleName;
@@ -56,5 +57,29 @@ public class CustomerRegisterRequest extends RegisterRequest {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public String getInsuranceCompany() {
+        return insuranceCompany;
+    }
+
+    public void setInsuranceCompany(String insuranceCompany) {
+        this.insuranceCompany = insuranceCompany;
+    }
+
+    public String getInsuranceNumber() {
+        return insuranceNumber;
+    }
+
+    public void setInsuranceNumber(String insuranceNumber) {
+        this.insuranceNumber = insuranceNumber;
+    }
+
+    public String getDriverLicense() {
+        return driverLicense;
+    }
+
+    public void setDriverLicense(String driverLicense) {
+        this.driverLicense = driverLicense;
     }
 }

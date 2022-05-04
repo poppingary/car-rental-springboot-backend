@@ -14,6 +14,6 @@ public class VehicleController {
 
     @GetMapping(value = "/locations")
     public ResponseEntity getLocations() {
-        return ResponseEntity.ok(this.vehicleService.getLocations());
+        return this.vehicleService.getLocations();
     }
 }
