@@ -1,6 +1,8 @@
-package agk.wow.carrental.model;
+package agk.wow.carrental.rpcdomain.request;
 
-public class CustomerDto extends UserDto {
+import agk.wow.carrental.rpcdomain.request.RegisterRequest;
+
+public class CustomerRegisterRequest extends RegisterRequest {
     private String middleName;
     private String phoneNumber;
     private String street;

@@ -1,4 +1,4 @@
-package agk.wow.carrental.model;
+package agk.wow.carrental.rpcdomain.response;
 
 public class RegisterResponse {
     private Long id;

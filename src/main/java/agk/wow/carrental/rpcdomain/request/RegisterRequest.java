@@ -1,6 +1,6 @@
-package agk.wow.carrental.model;
+package agk.wow.carrental.rpcdomain.request;
 
-public class UserDto {
+public class RegisterRequest {
     private String email;
     private String password;
     private String firstName;

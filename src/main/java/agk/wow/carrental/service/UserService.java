@@ -7,6 +7,10 @@ import agk.wow.carrental.model.*;
 import agk.wow.carrental.repository.CustomerRepository;
 import agk.wow.carrental.repository.EmployeeRepository;
 import agk.wow.carrental.rpcdomain.ResponseBody;
+import agk.wow.carrental.rpcdomain.request.CustomerRegisterRequest;
+import agk.wow.carrental.rpcdomain.request.EmployeeRegisterRequest;
+import agk.wow.carrental.rpcdomain.request.JwtRequest;
+import agk.wow.carrental.rpcdomain.request.RegisterRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,12 +46,12 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public ResponseEntity register(UserDto userDto, UserType userType) {
+	public ResponseEntity register(RegisterRequest registerRequest, UserType userType) {
 		switch(userType) {
 			case CUSTOMER:
-				CustomerDto customerDto = (CustomerDto) userDto;
+				CustomerRegisterRequest customerRegisterRequest = (CustomerRegisterRequest) registerRequest;
 				Customer newCustomer = new Customer();
-				BeanUtils.copyProperties(customerDto, newCustomer);
+				BeanUtils.copyProperties(customerRegisterRequest, newCustomer);
 
 				if (isCustomerRegistered(newCustomer)) {
 					return new ResponseEntity(new ResponseBody(ResponseBodyMessage.USER_IS_REGISTERED.getMessage()), HttpStatus.BAD_REQUEST);
@@ -56,9 +60,9 @@ public class UserService implements UserDetailsService {
 				this.customerRepository.save(newCustomer);
 				break;
 			case EMPLOYEE:
-				EmployeeDto employeeDto = (EmployeeDto) userDto;
+				EmployeeRegisterRequest employeeRegisterRequest = (EmployeeRegisterRequest) registerRequest;
 				Employee newEmployee = new Employee();
-				BeanUtils.copyProperties(employeeDto, newEmployee);
+				BeanUtils.copyProperties(employeeRegisterRequest, newEmployee);
 
 				if (isEmployeeRegistered(newEmployee)) {
 					return new ResponseEntity(new ResponseBody(ResponseBodyMessage.USER_IS_REGISTERED.getMessage()), HttpStatus.BAD_REQUEST);

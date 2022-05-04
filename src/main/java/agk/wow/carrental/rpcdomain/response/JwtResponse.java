@@ -1,4 +1,4 @@
-package agk.wow.carrental.model;
+package agk.wow.carrental.rpcdomain.response;
 
 import java.io.Serializable;
 
