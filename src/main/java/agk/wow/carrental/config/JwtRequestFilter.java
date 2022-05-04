@@ -1,7 +1,7 @@
 package agk.wow.carrental.config;
 
 import agk.wow.carrental.LoadDatabase;
-import agk.wow.carrental.service.EmployeeService;
+import agk.wow.carrental.service.UserService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private static final String WORDS_START_WITH = "Bearer ";
 
 	@Autowired
-	private EmployeeService employeeService;
+	private UserService userService;
 
 	@Autowired
 	private TokenUtil tokenUtil;
@@ -77,7 +77,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			return;
 		}
 
-		UserDetails userDetails = this.employeeService.loadUserByUsername(username);
+		UserDetails userDetails = this.userService.loadUserByUsername(username);
 		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 		usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 		SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);

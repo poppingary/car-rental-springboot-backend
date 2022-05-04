@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "agk_employee")
+@Entity(name = "agk_employee")
 public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "employee_id")
     private long employeeId;
 
@@ -18,14 +18,15 @@ public class Employee {
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
-    @Column(unique = true, nullable = false, length = 45)
+    @Column(unique = true, nullable = false, length = 50)
     private String email;
 
     @JsonIgnore
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 20)
+    @JsonIgnore
+    @Column(nullable = false, length = 10)
     private String role;
 
     public Employee() {
