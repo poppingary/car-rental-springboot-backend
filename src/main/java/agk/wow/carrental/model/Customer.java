@@ -30,7 +30,7 @@ public class Customer {
     @Column(nullable = false, length = 30)
     private String state;
 
-    @Column(nullable = false, length = 5)
+    @Column(nullable = false, length = 10)
     private String zipcode;
 
     @Column(name = "first_name", length = 20)
