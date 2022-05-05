@@ -69,6 +69,7 @@ public class UserService implements UserDetailsService {
 					return new ResponseEntity(new ResponseBody(ResponseBodyMessage.USER_IS_REGISTERED.getMessage()), HttpStatus.BAD_REQUEST);
 				}
 				newEmployee.setPassword(this.bcryptEncoder.encode(newEmployee.getPassword()));
+				newEmployee.setRole(UserType.EMPLOYEE.getType());
 				this.employeeRepository.save(newEmployee);
 				break;
 		}
@@ -97,7 +98,7 @@ public class UserService implements UserDetailsService {
 		jwtResponse.setEmail(email);
 		if (!ObjectUtils.isEmpty(customer)) {
 			jwtResponse.setCustomerId(customer.getId());
-			jwtResponse.setRole(UserType.CUSTOMER.toString());
+			jwtResponse.setRole(UserType.CUSTOMER.getType());
 			jwtResponse.setFirstName(customer.getFirstName());
 			jwtResponse.setLastName(customer.getLastName());
 		} else {
