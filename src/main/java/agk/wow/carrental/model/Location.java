@@ -36,6 +36,14 @@ public class Location {
     @OneToMany(mappedBy = "location")
     private Set<Vehicle> vehicles;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "pickupLocation")
+    private Set<Reservation> reservationPick;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "dropOffLocation")
+    private Set<Reservation> reservationDrop;
+
     public String getLocationId() {
         return locationId;
     }
@@ -98,5 +106,21 @@ public class Location {
 
     public void setVehicles(Set<Vehicle> vehicles) {
         this.vehicles = vehicles;
+    }
+
+    public Set<Reservation> getReservationPick() {
+        return reservationPick;
+    }
+
+    public void setReservationPick(Set<Reservation> reservationPick) {
+        this.reservationPick = reservationPick;
+    }
+
+    public Set<Reservation> getReservationDrop() {
+        return reservationDrop;
+    }
+
+    public void setReservationDrop(Set<Reservation> reservationDrop) {
+        this.reservationDrop = reservationDrop;
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name = "agk_customer")
 public class Customer {
@@ -56,6 +57,10 @@ public class Customer {
     @ManyToOne
     @JoinColumn(name = "registration_number")
     private Corporate corporate;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "customer")
+    private Set<Reservation> reservation;
 
     public String getId() {
         return id;
@@ -175,5 +180,13 @@ public class Customer {
 
     public void setCorporate(Corporate corporate) {
         this.corporate = corporate;
+    }
+
+    public Set<Reservation> getOrder() {
+        return reservation;
+    }
+
+    public void setOrder(Set<Reservation> reservation) {
+        this.reservation = reservation;
     }
 }

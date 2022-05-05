@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name = "agk_vehicle")
 public class Vehicle {
@@ -40,8 +41,12 @@ public class Vehicle {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "location_id")
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "vehicle")
+    private Set<Reservation> reservation;
 
     public String getVehicleId() {
         return vehicleId;
@@ -121,5 +126,13 @@ public class Vehicle {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Set<Reservation> getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Set<Reservation> reservation) {
+        this.reservation = reservation;
     }
 }
