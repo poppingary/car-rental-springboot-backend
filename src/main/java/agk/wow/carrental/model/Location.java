@@ -1,8 +1,10 @@
 package agk.wow.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity(name = "agk_location")
 public class Location {
@@ -29,6 +31,10 @@ public class Location {
 
     @Column(nullable = false, length = 10)
     private String zipcode;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "location")
+    private Set<Vehicle> vehicles;
 
     public String getLocationId() {
         return locationId;
@@ -84,5 +90,13 @@ public class Location {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public Set<Vehicle> getVehicles() {
+        return vehicles;
+    }
+
+    public void setVehicles(Set<Vehicle> vehicles) {
+        this.vehicles = vehicles;
     }
 }

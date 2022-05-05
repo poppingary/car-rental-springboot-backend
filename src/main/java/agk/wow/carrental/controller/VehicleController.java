@@ -16,4 +16,9 @@ public class VehicleController {
     public ResponseEntity getLocations() {
         return this.vehicleService.getLocations();
     }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
+        return this.vehicleService.getVehicleByLocation(locationId);
+    }
 }
