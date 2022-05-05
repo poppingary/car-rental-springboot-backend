@@ -13,6 +13,11 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
+    @GetMapping(value = "/location")
+    public ResponseEntity getLocation(@RequestParam String locationId) {
+        return this.vehicleService.getLocationByLocationId(locationId);
+    }
+
     @GetMapping(value = "/locations")
     public ResponseEntity getLocations() {
         return this.vehicleService.getLocations();

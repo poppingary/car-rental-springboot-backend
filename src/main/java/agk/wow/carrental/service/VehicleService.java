@@ -38,6 +38,12 @@ public class VehicleService {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    public ResponseEntity getLocationByLocationId(String locationId) {
+        Location location = this.locationRepository.findById(locationId).get();
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), location), HttpStatus.OK);
+    }
+
     public ResponseEntity getLocations() {
         Iterable<Location> locations = this.locationRepository.findAll();
 
