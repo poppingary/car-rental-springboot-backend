@@ -11,6 +11,7 @@ import agk.wow.carrental.rpcdomain.request.CustomerRegisterRequest;
 import agk.wow.carrental.rpcdomain.request.EmployeeRegisterRequest;
 import agk.wow.carrental.rpcdomain.request.JwtRequest;
 import agk.wow.carrental.rpcdomain.request.RegisterRequest;
+import agk.wow.carrental.rpcdomain.response.JwtResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -89,8 +90,24 @@ public class UserService implements UserDetailsService {
 
 		this.authenticate(email, password);
 		String token = this.tokenUtil.generateToken(email);
+		Customer customer = this.customerRepository.findByEmail(email);
+		Employee employee = this.employeeRepository.findByEmail(email);
+		JwtResponse jwtResponse = new JwtResponse();
+		jwtResponse.setToken(token);
+		jwtResponse.setEmail(email);
+		if (!ObjectUtils.isEmpty(customer)) {
+			jwtResponse.setCustomerId(customer.getId());
+			jwtResponse.setRole(UserType.CUSTOMER.toString());
+			jwtResponse.setFirstName(customer.getFirstName());
+			jwtResponse.setLastName(customer.getLastName());
+		} else {
+			jwtResponse.setEmployeeId(employee.getId());
+			jwtResponse.setRole(employee.getRole());
+			jwtResponse.setFirstName(employee.getFirstName());
+			jwtResponse.setLastName(employee.getLastName());
+		}
 
-		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), token), HttpStatus.OK);
+		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), jwtResponse), HttpStatus.OK);
 	}
 
 	private void authenticate(String email, String password) throws Exception {
