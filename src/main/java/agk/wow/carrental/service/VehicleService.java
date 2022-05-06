@@ -1,14 +1,8 @@
 package agk.wow.carrental.service;
 
 import agk.wow.carrental.constant.ResponseBodyMessage;
-import agk.wow.carrental.model.Customer;
-import agk.wow.carrental.model.Location;
-import agk.wow.carrental.model.Reservation;
-import agk.wow.carrental.model.Vehicle;
-import agk.wow.carrental.repository.CustomerRepository;
-import agk.wow.carrental.repository.LocationRepository;
-import agk.wow.carrental.repository.ReservationRepository;
-import agk.wow.carrental.repository.VehicleRepository;
+import agk.wow.carrental.model.*;
+import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +24,9 @@ public class VehicleService {
     private LocationRepository locationRepository;
 
     @Autowired
+    private VehicleTypeRepository vehicleTypeRepository;
+
+    @Autowired
     private VehicleRepository vehicleRepository;
 
     @Autowired
@@ -48,6 +45,12 @@ public class VehicleService {
         Iterable<Location> locations = this.locationRepository.findAll();
 
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), locations), HttpStatus.OK);
+    }
+
+    public ResponseEntity getTypes() {
+        Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), types), HttpStatus.OK);
     }
 
     public ResponseEntity getVehicleByLocation(String locationId) {

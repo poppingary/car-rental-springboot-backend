@@ -23,6 +23,11 @@ public class VehicleController {
         return this.vehicleService.getLocations();
     }
 
+    @GetMapping(value = "/types")
+    public ResponseEntity getTypes() {
+        return this.vehicleService.getTypes();
+    }
+
     @GetMapping(value = "/search")
     public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
         return this.vehicleService.getVehicleByLocation(locationId);
