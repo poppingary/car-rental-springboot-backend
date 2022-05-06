@@ -134,7 +134,7 @@ public class UserService implements UserDetailsService {
 		String insuranceNumber = updateIndividualCustomerRequest.getInsuranceNumber();
 		String driverLicense = updateIndividualCustomerRequest.getDriverLicense();
 
-		this.customerRepository.updateIndivisualCustomer(customerId, firstName, middleName, lastName, phoneNumber, street, city, state, zipcode, insuranceCompany, insuranceNumber, driverLicense);
+		this.customerRepository.updateIndividualCustomer(customerId, firstName, middleName, lastName, phoneNumber, street, city, state, zipcode, insuranceCompany, insuranceNumber, driverLicense);
 
 		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
 	}
@@ -147,6 +147,22 @@ public class UserService implements UserDetailsService {
 		String lastName = updateEmployeeRequest.getLastName();
 
 		this.employeeRepository.updateEmployee(employeeId, firstName, middleName, lastName);
+
+		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+	}
+
+	@Transactional
+	public ResponseEntity updateCustomerCredential(UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
+		String customerId = updateCustomerCredentialRequest.getCustomerId();
+		String currentPassword = updateCustomerCredentialRequest.getCurrentPassword();
+		String newPassword = this.bcryptEncoder.encode(updateCustomerCredentialRequest.getNewPassword());
+
+		Customer customer = this.customerRepository.findById(customerId).get();
+		if (!this.bcryptEncoder.matches(currentPassword, customer.getPassword())) {
+			return new ResponseEntity((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
+		}
+
+		this.customerRepository.updateCredential(customerId, newPassword);
 
 		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}

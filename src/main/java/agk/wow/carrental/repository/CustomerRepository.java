@@ -26,7 +26,7 @@ public interface CustomerRepository extends CrudRepository<Customer, String> {
             "c.insuranceNumber = :insuranceNumber, " +
             "c.driverLicense = :driverLicense " +
             "WHERE c.id = :customerId")
-    void updateIndivisualCustomer(@Param("customerId") String customerId,
+    void updateIndividualCustomer(@Param("customerId") String customerId,
                            @Param("firstName") String firstName,
                            @Param("middleName") String middleName,
                            @Param("lastName") String lastName,
@@ -38,4 +38,12 @@ public interface CustomerRepository extends CrudRepository<Customer, String> {
                            @Param("insuranceCompany") String insuranceCompany,
                            @Param("insuranceNumber") String insuranceNumber,
                            @Param("driverLicense") String driverLicense);
+
+    @Modifying
+    @Query("UPDATE agk_customer c " +
+            "SET " +
+            "c.password = :password " +
+            "WHERE c.id = :customerId")
+    void updateCredential(@Param("customerId") String customerId,
+                          @Param("password") String password);
 }
