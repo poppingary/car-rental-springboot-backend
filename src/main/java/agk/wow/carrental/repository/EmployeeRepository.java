@@ -22,4 +22,12 @@ public interface EmployeeRepository extends CrudRepository<Employee, String> {
                         @Param("firstName") String firstName,
                         @Param("middleName") String middleName,
                         @Param("lastName") String lastName);
+
+    @Modifying
+    @Query("UPDATE agk_employee e " +
+            "SET " +
+            "e.password = :password " +
+            "WHERE e.id = :employeeId")
+    void updateCredential(@Param("employeeId") String employeeId,
+                          @Param("password") String password);
 }

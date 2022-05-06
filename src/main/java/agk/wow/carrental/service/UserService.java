@@ -167,6 +167,22 @@ public class UserService implements UserDetailsService {
 		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}
 
+	@Transactional
+	public ResponseEntity updateEmployeeCredential(UpdateEmployeeCredentialRequest updateEmployeeCredentialRequest) {
+		String employeeId = updateEmployeeCredentialRequest.getEmployeeId();
+		String currentPassword = updateEmployeeCredentialRequest.getCurrentPassword();
+		String newPassword = this.bcryptEncoder.encode(updateEmployeeCredentialRequest.getNewPassword());
+
+		Employee employee = this.employeeRepository.findById(employeeId).get();
+		if (!this.bcryptEncoder.matches(currentPassword, employee.getPassword())) {
+			return new ResponseEntity((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
+		}
+
+		this.employeeRepository.updateCredential(employeeId, newPassword);
+
+		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Customer customer = this.customerRepository.findByEmail(email);
