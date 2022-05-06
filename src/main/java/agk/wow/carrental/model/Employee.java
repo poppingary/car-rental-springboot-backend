@@ -16,6 +16,9 @@ public class Employee {
     @Column(name = "first_name", nullable = false, length = 20)
     private String firstName;
 
+    @Column(name = "middle_name", length = 20)
+    private String middleName = "";
+
     @Column(name = "last_name", nullable = false, length = 20)
     private String lastName;
 
@@ -34,9 +37,10 @@ public class Employee {
 
     }
 
-    public Employee(String id, String firstName, String lastName, String email, String password, String role) {
+    public Employee(String id, String firstName, String middleName, String lastName, String email, String password, String role) {
         this.id = id;
         this.firstName = firstName;
+        this.middleName = middleName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
@@ -57,6 +61,14 @@ public class Employee {
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
     }
 
     public String getLastName() {

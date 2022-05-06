@@ -3,6 +3,7 @@ package agk.wow.carrental.controller;
 import agk.wow.carrental.constant.UserType;
 import agk.wow.carrental.rpcdomain.request.EmployeeRegisterRequest;
 import agk.wow.carrental.rpcdomain.request.JwtRequest;
+import agk.wow.carrental.rpcdomain.request.UpdateEmployeeRequest;
 import agk.wow.carrental.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,5 +24,10 @@ public class EmployeeController {
 	@PostMapping(value = "/login")
 	public ResponseEntity login(@RequestBody JwtRequest jwtRequest) throws Exception {
 		return this.userService.login(jwtRequest);
+	}
+
+	@PostMapping(value = "/update")
+	public ResponseEntity update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest) {
+		return this.userService.updateEmployee(updateEmployeeRequest);
 	}
 }

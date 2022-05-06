@@ -139,6 +139,18 @@ public class UserService implements UserDetailsService {
 		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
 	}
 
+	@Transactional
+	public ResponseEntity updateEmployee(UpdateEmployeeRequest updateEmployeeRequest) {
+		String employeeId = updateEmployeeRequest.getEmployeeId();
+		String firstName = updateEmployeeRequest.getFirstName();
+		String middleName = updateEmployeeRequest.getMiddleName();
+		String lastName = updateEmployeeRequest.getLastName();
+
+		this.employeeRepository.updateEmployee(employeeId, firstName, middleName, lastName);
+
+		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Customer customer = this.customerRepository.findByEmail(email);

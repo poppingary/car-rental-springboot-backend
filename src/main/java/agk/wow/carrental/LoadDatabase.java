@@ -23,7 +23,7 @@ public class LoadDatabase {
         return args -> {
             if (ObjectUtils.isEmpty(employeeRepository.findByEmail("lbj@wow.com"))) {
                 log.info("Preloading data ");
-                log.info(employeeRepository.save(new Employee(UUIDUtil.getUUID(), "Lebron",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), UserType.MANAGER.getType())).toString());
+                log.info(employeeRepository.save(new Employee(UUIDUtil.getUUID(), "Lebron", "",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), UserType.MANAGER.getType())).toString());
             }
         };
     }
