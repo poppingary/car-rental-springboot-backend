@@ -37,29 +37,32 @@ public class Customer {
     private String zipcode;
 
     @Column(name = "first_name", length = 20)
-    private String firstName;
+    private String firstName = "";
+
+    @Column(name = "middle_name", length = 20)
+    private String middleName = "";
 
     @Column(name = "last_name", length = 20)
-    private String lastName;
+    private String lastName = "";
 
     @Column(name = "insurance_company", length = 50)
-    private String insuranceCompany;
+    private String insuranceCompany = "";
 
     @Column(name = "insurance_number", length = 20)
-    private String insuranceNumber;
+    private String insuranceNumber = "";
 
     @Column(name = "driver_license", length = 20)
-    private String driverLicense;
+    private String driverLicense = "";
 
     @Column(name = "corporate_employee_id", length = 20)
-    private String corporateEmployeeId;
+    private String corporateEmployeeId = "";
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "registration_number")
     private Corporate corporate;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private Set<Reservation> reservation;
 
     public String getId() {
@@ -134,6 +137,14 @@ public class Customer {
         this.firstName = firstName;
     }
 
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName(String middleName) {
+        this.middleName = middleName;
+    }
+
     public String getLastName() {
         return lastName;
     }
@@ -182,11 +193,11 @@ public class Customer {
         this.corporate = corporate;
     }
 
-    public Set<Reservation> getOrder() {
+    public Set<Reservation> getReservation() {
         return reservation;
     }
 
-    public void setOrder(Set<Reservation> reservation) {
+    public void setReservation(Set<Reservation> reservation) {
         this.reservation = reservation;
     }
 }

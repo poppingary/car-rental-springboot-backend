@@ -7,10 +7,7 @@ import agk.wow.carrental.model.*;
 import agk.wow.carrental.repository.CustomerRepository;
 import agk.wow.carrental.repository.EmployeeRepository;
 import agk.wow.carrental.rpcdomain.ResponseBody;
-import agk.wow.carrental.rpcdomain.request.CustomerRegisterRequest;
-import agk.wow.carrental.rpcdomain.request.EmployeeRegisterRequest;
-import agk.wow.carrental.rpcdomain.request.JwtRequest;
-import agk.wow.carrental.rpcdomain.request.RegisterRequest;
+import agk.wow.carrental.rpcdomain.request.*;
 import agk.wow.carrental.rpcdomain.response.JwtResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
@@ -119,6 +117,26 @@ public class UserService implements UserDetailsService {
 		} catch (BadCredentialsException e) {
 			throw new Exception("INVALID_CREDENTIALS", e);
 		}
+	}
+
+	@Transactional
+	public ResponseEntity updateIndividualCustomer(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+		String customerId = updateIndividualCustomerRequest.getCustomerId();
+		String firstName = updateIndividualCustomerRequest.getFirstName();
+		String middleName = updateIndividualCustomerRequest. getMiddleName();
+		String lastName = updateIndividualCustomerRequest.getLastName();
+		String phoneNumber = updateIndividualCustomerRequest.getPhoneNumber();
+		String street = updateIndividualCustomerRequest.getStreet();
+		String city = updateIndividualCustomerRequest.getCity();
+		String state = updateIndividualCustomerRequest.getState();
+		String zipcode = updateIndividualCustomerRequest.getZipcode();
+		String insuranceCompany = updateIndividualCustomerRequest.getInsuranceCompany();
+		String insuranceNumber = updateIndividualCustomerRequest.getInsuranceNumber();
+		String driverLicense = updateIndividualCustomerRequest.getDriverLicense();
+
+		this.customerRepository.updateIndivisualCustomer(customerId, firstName, middleName, lastName, phoneNumber, street, city, state, zipcode, insuranceCompany, insuranceNumber, driverLicense);
+
+		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
 	}
 
 	@Override
