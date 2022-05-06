@@ -13,13 +13,13 @@ public class Corporate {
     @Column(name = "registration_number")
     private String registrationNumber;
 
-    @Column(name = "corporate_name")
+    @Column(name = "corporate_name", nullable = false)
     private String corporateName;
 
-    @Column(name = "corporate_discount", precision = 2)
+    @Column(name = "corporate_discount", nullable = false, precision = 2)
     private Float corporateDiscount;
 
-    @OneToMany(mappedBy = "corporate")
+    @OneToMany(mappedBy = "corporate", cascade = CascadeType.ALL)
     private Set<Customer> cutomers;
 
     public String getRegistrationNumber() {

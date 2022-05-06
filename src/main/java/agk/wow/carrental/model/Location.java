@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Set;
 
 @Entity(name = "agk_location")
-public class Location {
+public class Location implements Serializable {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
@@ -33,15 +34,15 @@ public class Location {
     private String zipcode;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "location")
+    @OneToMany(mappedBy = "location", cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "pickupLocation")
+    @OneToMany(mappedBy = "pickupLocation", cascade = CascadeType.ALL)
     private Set<Reservation> reservationPick;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "dropOffLocation")
+    @OneToMany(mappedBy = "dropOffLocation", cascade = CascadeType.ALL)
     private Set<Reservation> reservationDrop;
 
     public String getLocationId() {

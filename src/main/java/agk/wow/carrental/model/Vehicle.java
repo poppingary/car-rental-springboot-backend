@@ -9,9 +9,7 @@ import java.util.Set;
 @Entity(name = "agk_vehicle")
 public class Vehicle {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "vehicle_id")
+    @Column(name = "vehicle_id", length = 20)
     private String vehicleId;
 
     @Column(nullable = false, length = 20)
@@ -26,26 +24,21 @@ public class Vehicle {
     @Column(name = "license_plate", nullable = false, length = 20)
     private String licensePlate;
 
-    @Column(name = "vehicle_type", nullable = false, length = 20)
-    private String vehicleType;
-
-    @Column(name = "service_rate", nullable = false, precision = 10, scale = 2)
-    private Float serviceRate;
-
-    @Column(name = "excess_mileage_fee", nullable = false, precision = 10, scale = 2)
-    private Float excessMileageFee;
-
     @JsonIgnore
     @Column(name = "is_available", nullable = false, length = 1)
     private String isAvailable;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "vehicle_type_id", nullable = false)
+    private VehicleType vehicleType;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "vehicle")
+    @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
     private Set<Reservation> reservation;
 
     public String getVehicleId() {
@@ -88,30 +81,6 @@ public class Vehicle {
         this.licensePlate = licensePlate;
     }
 
-    public String getVehicleType() {
-        return vehicleType;
-    }
-
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
-    }
-
-    public Float getServiceRate() {
-        return serviceRate;
-    }
-
-    public void setServiceRate(Float serviceRate) {
-        this.serviceRate = serviceRate;
-    }
-
-    public Float getExcessMileageFee() {
-        return excessMileageFee;
-    }
-
-    public void setExcessMileageFee(Float excessMileageFee) {
-        this.excessMileageFee = excessMileageFee;
-    }
-
     public String getIsAvailable() {
         return isAvailable;
     }
@@ -126,6 +95,14 @@ public class Vehicle {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public VehicleType getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(VehicleType vehicleType) {
+        this.vehicleType = vehicleType;
     }
 
     public Set<Reservation> getReservation() {
