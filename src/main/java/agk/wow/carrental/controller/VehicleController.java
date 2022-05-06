@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin()
+@CrossOrigin("http://localhost:4200")
 @RequestMapping("vehicle")
 public class VehicleController {
     @Autowired

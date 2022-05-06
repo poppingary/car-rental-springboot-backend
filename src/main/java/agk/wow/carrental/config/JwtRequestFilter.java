@@ -33,9 +33,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-		String header = request.getHeader(AUTH_HEADER_KEY);
+		String authorization = request.getHeader(AUTH_HEADER_KEY);
 
-		String jwtToken = this.getJwtTokenFromHeader(header);
+		String jwtToken = this.getJwtTokenFromHeader(authorization);
 		String username = this.getUsername(jwtToken);
 
 		setUserAuthenticationToSpringSecurity(request, jwtToken, username);
