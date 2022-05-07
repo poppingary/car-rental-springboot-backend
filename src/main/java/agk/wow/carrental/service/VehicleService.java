@@ -21,9 +21,6 @@ public class VehicleService {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Autowired
-    private LocationRepository locationRepository;
-
-    @Autowired
     private VehicleTypeRepository vehicleTypeRepository;
 
     @Autowired
@@ -33,19 +30,10 @@ public class VehicleService {
     private CustomerRepository customerRepository;
 
     @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
     private ReservationRepository reservationRepository;
-
-    public ResponseEntity getLocationByLocationId(String locationId) {
-        Location location = this.locationRepository.findById(locationId).get();
-
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), location), HttpStatus.OK);
-    }
-
-    public ResponseEntity getLocations() {
-        Iterable<Location> locations = this.locationRepository.findAll();
-
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), locations), HttpStatus.OK);
-    }
 
     public ResponseEntity getTypes() {
         Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();

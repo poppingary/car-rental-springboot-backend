@@ -15,7 +15,7 @@ public class Location implements Serializable {
     @Column(name = "location_id")
     private String locationId;
 
-    @Column(name = "location_name", unique = true, nullable = false, length = 30)
+    @Column(name = "location_name", unique = true, nullable = false, length = 70)
     private String locationName;
 
     @Column(name = "phone_number", unique = true, nullable = false, length = 20)
