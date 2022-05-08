@@ -35,6 +35,12 @@ public class VehicleService {
     @Autowired
     private ReservationRepository reservationRepository;
 
+    public ResponseEntity getVehicles() {
+        Iterable<Vehicle> vehicles = this.vehicleRepository.findAll();
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
+    }
+
     public ResponseEntity getTypes() {
         Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();
 

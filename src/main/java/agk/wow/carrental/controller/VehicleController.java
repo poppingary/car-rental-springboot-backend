@@ -13,6 +13,11 @@ public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
 
+    @GetMapping(value = "/get/vehicles")
+    public ResponseEntity getVehicles() {
+        return this.vehicleService.getVehicles();
+    }
+
     @GetMapping(value = "/types")
     public ResponseEntity getTypes() {
         return this.vehicleService.getTypes();
