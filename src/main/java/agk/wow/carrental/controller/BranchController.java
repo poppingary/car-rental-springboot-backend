@@ -14,14 +14,14 @@ public class BranchController {
     @Autowired
     private LocationService locationService;
 
-    @GetMapping(value = "/get/location")
-    public ResponseEntity<?> getLocation(@RequestParam String locationId) {
-        return this.locationService.getLocationByLocationId(locationId);
-    }
-
     @GetMapping(value = "/get/locations")
     public ResponseEntity<?> getLocations() {
         return this.locationService.getLocations();
+    }
+
+    @GetMapping(value = "/get/location")
+    public ResponseEntity<?> getLocation(@RequestParam String locationId) {
+        return this.locationService.getLocationByLocationId(locationId);
     }
 
     @PostMapping(value = "/add/location")

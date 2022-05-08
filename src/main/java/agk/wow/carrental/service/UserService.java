@@ -140,11 +140,11 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public ResponseEntity updateEmployee(UpdateEmployeeRequest updateEmployeeRequest) {
-		String employeeId = updateEmployeeRequest.getEmployeeId();
-		String firstName = updateEmployeeRequest.getFirstName();
-		String middleName = updateEmployeeRequest.getMiddleName();
-		String lastName = updateEmployeeRequest.getLastName();
+	public ResponseEntity updateEmployeeProfile(UpdateEmployeeProfileRequest updateEmployeeProfileRequest) {
+		String employeeId = updateEmployeeProfileRequest.getEmployeeId();
+		String firstName = updateEmployeeProfileRequest.getFirstName();
+		String middleName = updateEmployeeProfileRequest.getMiddleName();
+		String lastName = updateEmployeeProfileRequest.getLastName();
 
 		this.employeeRepository.updateEmployee(employeeId, firstName, middleName, lastName);
 

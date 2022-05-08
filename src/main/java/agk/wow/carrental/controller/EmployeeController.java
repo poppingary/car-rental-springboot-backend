@@ -24,9 +24,9 @@ public class EmployeeController {
 		return this.userService.login(jwtRequest);
 	}
 
-	@PostMapping(value = "/update")
-	public ResponseEntity<?> update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest) {
-		return this.userService.updateEmployee(updateEmployeeRequest);
+	@PostMapping(value = "/update/profile")
+	public ResponseEntity<?> updateProfile(@RequestBody UpdateEmployeeProfileRequest updateEmployeeProfileRequest) {
+		return this.userService.updateEmployeeProfile(updateEmployeeProfileRequest);
 	}
 
 	@PostMapping(value = "/update/credential")
