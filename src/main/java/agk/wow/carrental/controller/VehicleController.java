@@ -1,6 +1,7 @@
 package agk.wow.carrental.controller;
 
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
+import agk.wow.carrental.rpcdomain.request.UpdateLocationRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleRequest;
 import agk.wow.carrental.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,11 @@ public class VehicleController {
     @PostMapping(value = "/add/vehicle")
     public ResponseEntity addVehicle(@RequestBody VehicleRequest vehicleRequest) {
         return this.vehicleService.addVehicle(vehicleRequest);
+    }
+
+    @PostMapping(value = "/update/vehicle")
+    public ResponseEntity updateVehicle(@RequestBody VehicleRequest vehicleRequest) {
+        return this.vehicleService.updateVehicle(vehicleRequest);
     }
 
     @GetMapping(value = "/types")

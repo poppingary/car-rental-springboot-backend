@@ -50,7 +50,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.csrf().disable()
 				.authorizeRequests()
-				.antMatchers("/customer/register", "/customer/login", "/employee/register", "/employee/login", "/vehicle/locations", "/vehicle/types", "/vehicle/search").permitAll()
+				.antMatchers("/customer/register",
+						"/customer/login",
+						"/employee/register",
+						"/employee/login",
+						"/branch/get/location",
+						"/branch/get/locations",
+						"/vehicle/types",
+						"/vehicle/search").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
