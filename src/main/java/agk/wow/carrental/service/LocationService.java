@@ -55,4 +55,11 @@ public class LocationService {
 
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
+
+    @Transactional
+    public ResponseEntity deleteLocation(String locationId) {
+        this.locationRepository.deleteById(locationId);
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+    }
 }
