@@ -7,6 +7,7 @@ import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleRequest;
+import agk.wow.carrental.rpcdomain.request.VehicleTypeRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,6 +87,18 @@ public class VehicleService {
         Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();
 
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), types), HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity addType(VehicleTypeRequest vehicleTypeRequest) {
+        VehicleType vehicleType = new VehicleType();
+        vehicleType.setExcessMileageFee(Float.valueOf(vehicleTypeRequest.getExcessMileageFee()));
+        vehicleType.setServiceRate(Float.valueOf(vehicleTypeRequest.getServiceRate()));
+        vehicleType.setVehicleType(vehicleTypeRequest.getVehicleType());
+
+        this.vehicleTypeRepository.save(vehicleType);
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     public ResponseEntity getVehicleByLocation(String locationId) {
