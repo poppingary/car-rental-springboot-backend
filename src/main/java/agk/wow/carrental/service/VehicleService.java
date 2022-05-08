@@ -115,6 +115,13 @@ public class VehicleService {
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
+    @Transactional
+    public ResponseEntity deleteType(String vehicleTypeId) {
+        this.vehicleTypeRepository.deleteById(vehicleTypeId);
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
     public ResponseEntity getVehicleByLocation(String locationId) {
         Set<Vehicle> vehicles = this.vehicleRepository.findByLocationLocationIdAndIsAvailable(locationId, IS_AVAILABLE);
 

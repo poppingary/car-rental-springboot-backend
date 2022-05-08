@@ -51,6 +51,11 @@ public class VehicleController {
         return this.vehicleService.updateType(updateVehicleTypeRequest);
     }
 
+    @DeleteMapping(value = "/delete/type")
+    public ResponseEntity deleteType(@RequestParam String vehicleTypeId) {
+        return this.vehicleService.deleteType(vehicleTypeId);
+    }
+
     @GetMapping(value = "/search")
     public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
         return this.vehicleService.getVehicleByLocation(locationId);
