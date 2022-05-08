@@ -56,8 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 						"/employee/login",
 						"/branch/get/location",
 						"/branch/get/locations",
-						"/vehicle/types",
-						"/vehicle/search").permitAll()
+						"/vehicle/get/types",
+						"/vehicle/get/vehicle").permitAll()
 				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)

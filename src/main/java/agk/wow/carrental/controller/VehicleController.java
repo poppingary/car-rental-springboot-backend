@@ -56,12 +56,12 @@ public class VehicleController {
         return this.vehicleService.deleteType(vehicleTypeId);
     }
 
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/get/vehicle")
     public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
         return this.vehicleService.getVehicleByLocation(locationId);
     }
 
-    @PostMapping(value = "/reserve")
+    @PostMapping(value = "/reserve/vehicle")
     public ResponseEntity reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
         return this.vehicleService.reserveVehicle(reservationRequest);
     }

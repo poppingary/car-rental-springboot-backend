@@ -5,7 +5,6 @@ import agk.wow.carrental.model.Corporate;
 import agk.wow.carrental.repository.CorporateRepository;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.CorporateRequest;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
