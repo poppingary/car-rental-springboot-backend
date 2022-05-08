@@ -2,7 +2,6 @@ package agk.wow.carrental.service;
 
 import agk.wow.carrental.constant.ResponseBodyMessage;
 import agk.wow.carrental.model.*;
-import agk.wow.carrental.model.VehicleType;
 import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
@@ -15,7 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -125,9 +123,13 @@ public class VehicleService {
     public ResponseEntity getVehicleByLocation(String locationId) {
         Set<Vehicle> vehicles = this.vehicleRepository.findByLocationLocationIdAndIsAvailable(locationId, IS_AVAILABLE);
 
-        ResponseEntity responseEntity = new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
+    }
 
-        return responseEntity;
+    public ResponseEntity getVehicleByVehicleId(String vehicleId) {
+        Vehicle vehicle = this.vehicleRepository.findById(vehicleId).get();
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicle), HttpStatus.OK);
     }
 
     @Transactional
