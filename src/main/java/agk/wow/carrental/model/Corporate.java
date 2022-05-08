@@ -1,6 +1,6 @@
 package agk.wow.carrental.model;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -8,8 +8,6 @@ import java.util.Set;
 @Entity(name = "agk_corporate")
 public class Corporate {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "registration_number")
     private String registrationNumber;
 
@@ -19,6 +17,7 @@ public class Corporate {
     @Column(name = "corporate_discount", nullable = false, precision = 2)
     private Float corporateDiscount;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "corporate", cascade = CascadeType.ALL)
     private Set<Customer> cutomers;
 

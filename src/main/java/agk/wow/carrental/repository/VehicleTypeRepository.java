@@ -1,6 +1,5 @@
 package agk.wow.carrental.repository;
 
-import agk.wow.carrental.model.Location;
 import agk.wow.carrental.model.VehicleType;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
