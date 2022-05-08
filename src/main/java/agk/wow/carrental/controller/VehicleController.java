@@ -21,6 +21,16 @@ public class VehicleController {
         return this.vehicleService.getVehicles();
     }
 
+    @GetMapping(value = "/get/vehicle/by/locationId")
+    public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
+        return this.vehicleService.getVehicleByLocation(locationId);
+    }
+
+    @GetMapping(value = "/get/vehicle/by/vehicleId")
+    public ResponseEntity getVehicleByVehicleId(@RequestParam String vehicleId) {
+        return this.vehicleService.getVehicleByVehicleId(vehicleId);
+    }
+
     @PostMapping(value = "/add/vehicle")
     public ResponseEntity addVehicle(@RequestBody VehicleRequest vehicleRequest) {
         return this.vehicleService.addVehicle(vehicleRequest);
@@ -54,20 +64,5 @@ public class VehicleController {
     @DeleteMapping(value = "/delete/type")
     public ResponseEntity deleteType(@RequestParam String vehicleTypeId) {
         return this.vehicleService.deleteType(vehicleTypeId);
-    }
-
-    @GetMapping(value = "/get/vehicle/by/locationId")
-    public ResponseEntity getVehicleByLocation(@RequestParam String locationId) {
-        return this.vehicleService.getVehicleByLocation(locationId);
-    }
-
-    @GetMapping(value = "/get/vehicle/by/vehicleId")
-    public ResponseEntity getVehicleByVehicleId(@RequestParam String vehicleId) {
-        return this.vehicleService.getVehicleByVehicleId(vehicleId);
-    }
-
-    @PostMapping(value = "/reserve/vehicle")
-    public ResponseEntity reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
-        return this.vehicleService.reserveVehicle(reservationRequest);
     }
 }

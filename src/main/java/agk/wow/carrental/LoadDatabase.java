@@ -1,6 +1,5 @@
 package agk.wow.carrental;
 
-import agk.wow.carrental.config.UUIDUtil;
 import agk.wow.carrental.constant.UserType;
 import agk.wow.carrental.model.Employee;
 import agk.wow.carrental.repository.EmployeeRepository;
@@ -13,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ObjectUtils;
 
+import java.util.UUID;
+
 
 @Configuration
 public class LoadDatabase {
@@ -23,7 +24,7 @@ public class LoadDatabase {
         return args -> {
             if (ObjectUtils.isEmpty(employeeRepository.findByEmail("lbj@wow.com"))) {
                 log.info("Preloading data ");
-                log.info(employeeRepository.save(new Employee(UUIDUtil.getUUID(), "Lebron", "",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), UserType.MANAGER.getType())).toString());
+                log.info(employeeRepository.save(new Employee(UUID.randomUUID().toString(), "Lebron", "",  "James", "lbj@wow.com", bcryptEncoder.encode("admin"), UserType.MANAGER.getType())).toString());
             }
         };
     }
