@@ -15,22 +15,22 @@ public class EmployeeController {
 	private UserService userService;
 
 	@PostMapping(value = "/register")
-	public ResponseEntity register(@RequestBody EmployeeRegisterRequest employeeRegisterRequest) {
+	public ResponseEntity<?> register(@RequestBody EmployeeRegisterRequest employeeRegisterRequest) {
 		return this.userService.register(employeeRegisterRequest, UserType.EMPLOYEE);
 	}
 
 	@PostMapping(value = "/login")
-	public ResponseEntity login(@RequestBody JwtRequest jwtRequest) throws Exception {
+	public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest) throws Exception {
 		return this.userService.login(jwtRequest);
 	}
 
 	@PostMapping(value = "/update")
-	public ResponseEntity update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest) {
+	public ResponseEntity<?> update(@RequestBody UpdateEmployeeRequest updateEmployeeRequest) {
 		return this.userService.updateEmployee(updateEmployeeRequest);
 	}
 
 	@PostMapping(value = "/update/credential")
-	public ResponseEntity updateCredential(@RequestBody UpdateEmployeeCredentialRequest updateEmployeeCredentialRequest) {
+	public ResponseEntity<?> updateCredential(@RequestBody UpdateEmployeeCredentialRequest updateEmployeeCredentialRequest) {
 		return this.userService.updateEmployeeCredential(updateEmployeeCredentialRequest);
 	}
 }

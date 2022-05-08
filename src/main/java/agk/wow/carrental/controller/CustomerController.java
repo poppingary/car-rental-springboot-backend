@@ -18,22 +18,22 @@ public class CustomerController {
     private UserService userService;
 
     @PostMapping(value = "/register")
-    public ResponseEntity register(@RequestBody CustomerRegisterRequest customerRegisterRequest) {
+    public ResponseEntity<?> register(@RequestBody CustomerRegisterRequest customerRegisterRequest) {
         return this.userService.register(customerRegisterRequest, UserType.CUSTOMER);
     }
 
     @PostMapping(value = "/login")
-    public ResponseEntity login(@RequestBody JwtRequest jwtRequest) throws Exception {
+    public ResponseEntity<?> login(@RequestBody JwtRequest jwtRequest) throws Exception {
         return this.userService.login(jwtRequest);
     }
 
     @PostMapping(value = "/update/individual")
-    public ResponseEntity updateIndividualCustomer(@RequestBody UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+    public ResponseEntity<?> updateIndividualCustomer(@RequestBody UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
         return this.userService.updateIndividualCustomer(updateIndividualCustomerRequest);
     }
 
     @PostMapping(value = "/update/credential")
-    public ResponseEntity updateCredential(@RequestBody UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
+    public ResponseEntity<?> updateCredential(@RequestBody UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
         return this.userService.updateCustomerCredential(updateCustomerCredentialRequest);
     }
 }

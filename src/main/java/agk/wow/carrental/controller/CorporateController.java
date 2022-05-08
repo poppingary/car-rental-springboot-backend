@@ -14,22 +14,22 @@ public class CorporateController {
     private CorporateService corporateService;
 
     @GetMapping(value = "/get/corporates")
-    public ResponseEntity getCorporates() {
+    public ResponseEntity<?> getCorporates() {
         return this.corporateService.getCorporates();
     }
 
     @PostMapping(value = "/add/corporate")
-    public ResponseEntity addCorporate(@RequestBody CorporateRequest corporateRequest) {
+    public ResponseEntity<?> addCorporate(@RequestBody CorporateRequest corporateRequest) {
         return this.corporateService.addCorporate(corporateRequest);
     }
 
     @PostMapping(value = "/update/corporate")
-    public ResponseEntity updateCorporate(@RequestBody CorporateRequest corporateRequest) {
+    public ResponseEntity<?> updateCorporate(@RequestBody CorporateRequest corporateRequest) {
         return this.corporateService.updateCorporate(corporateRequest);
     }
 
     @DeleteMapping(value = "/delete/corporate")
-    public ResponseEntity deleteCorporate(@RequestParam String registrationNumber) {
+    public ResponseEntity<?> deleteCorporate(@RequestParam String registrationNumber) {
         return this.corporateService.deleteCorporate(registrationNumber);
     }
 }

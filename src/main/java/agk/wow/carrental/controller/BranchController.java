@@ -15,27 +15,27 @@ public class BranchController {
     private LocationService locationService;
 
     @GetMapping(value = "/get/location")
-    public ResponseEntity getLocation(@RequestParam String locationId) {
+    public ResponseEntity<?> getLocation(@RequestParam String locationId) {
         return this.locationService.getLocationByLocationId(locationId);
     }
 
     @GetMapping(value = "/get/locations")
-    public ResponseEntity getLocations() {
+    public ResponseEntity<?> getLocations() {
         return this.locationService.getLocations();
     }
 
     @PostMapping(value = "/add/location")
-    public ResponseEntity addLocation(@RequestBody LocationRequest locationRequest) {
+    public ResponseEntity<?> addLocation(@RequestBody LocationRequest locationRequest) {
         return this.locationService.addLocation(locationRequest);
     }
 
     @PostMapping(value = "/update/location")
-    public ResponseEntity updateLocation(@RequestBody UpdateLocationRequest updateLocationRequest) {
+    public ResponseEntity<?> updateLocation(@RequestBody UpdateLocationRequest updateLocationRequest) {
         return this.locationService.updateLocation(updateLocationRequest);
     }
 
     @DeleteMapping(value = "/delete/location")
-    public ResponseEntity deleteLocation(@RequestParam String locationId) {
+    public ResponseEntity<?> deleteLocation(@RequestParam String locationId) {
         return this.locationService.deleteLocation(locationId);
     }
 }

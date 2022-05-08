@@ -14,7 +14,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @PostMapping(value = "/reserve/vehicle")
-    public ResponseEntity reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
+    public ResponseEntity<?> reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
         return this.reservationService.reserveVehicle(reservationRequest);
     }
 }
