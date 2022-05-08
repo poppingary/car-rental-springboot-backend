@@ -75,6 +75,13 @@ public class VehicleService {
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
+    @Transactional
+    public ResponseEntity deleteVehicle(String vehicleId) {
+        this.vehicleRepository.deleteById(vehicleId);
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
     public ResponseEntity getTypes() {
         Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();
 
