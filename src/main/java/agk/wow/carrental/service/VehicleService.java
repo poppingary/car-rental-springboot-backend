@@ -6,6 +6,7 @@ import agk.wow.carrental.model.VehicleType;
 import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
+import agk.wow.carrental.rpcdomain.request.UpdateVehicleTypeRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleTypeRequest;
 import org.springframework.beans.BeanUtils;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -91,12 +93,24 @@ public class VehicleService {
 
     @Transactional
     public ResponseEntity addType(VehicleTypeRequest vehicleTypeRequest) {
-        VehicleType vehicleType = new VehicleType();
-        vehicleType.setExcessMileageFee(Float.valueOf(vehicleTypeRequest.getExcessMileageFee()));
-        vehicleType.setServiceRate(Float.valueOf(vehicleTypeRequest.getServiceRate()));
-        vehicleType.setVehicleType(vehicleTypeRequest.getVehicleType());
+        VehicleType newVehicleType = new VehicleType();
+        newVehicleType.setExcessMileageFee(Float.valueOf(vehicleTypeRequest.getExcessMileageFee()));
+        newVehicleType.setServiceRate(Float.valueOf(vehicleTypeRequest.getServiceRate()));
+        newVehicleType.setVehicleType(vehicleTypeRequest.getVehicleType());
 
-        this.vehicleTypeRepository.save(vehicleType);
+        this.vehicleTypeRepository.save(newVehicleType);
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity updateType(UpdateVehicleTypeRequest updateVehicleTypeRequest) {
+        String vehicleTypeId = updateVehicleTypeRequest.getVehicleTypeId();
+        Float excessMileageFee = Float.valueOf(updateVehicleTypeRequest.getExcessMileageFee());
+        Float serviceRate = Float.valueOf(updateVehicleTypeRequest.getServiceRate());
+        String vehicleType = updateVehicleTypeRequest.getVehicleType();
+
+        this.vehicleTypeRepository.updateVehicleType(vehicleTypeId, excessMileageFee, serviceRate, vehicleType);
 
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }

@@ -1,6 +1,7 @@
 package agk.wow.carrental.controller;
 
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
+import agk.wow.carrental.rpcdomain.request.UpdateVehicleTypeRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleRequest;
 import agk.wow.carrental.rpcdomain.request.VehicleTypeRequest;
 import agk.wow.carrental.service.VehicleService;
@@ -43,6 +44,11 @@ public class VehicleController {
     @PostMapping(value = "/add/type")
     public ResponseEntity addType(@RequestBody VehicleTypeRequest vehicleTypeRequest) {
         return this.vehicleService.addType(vehicleTypeRequest);
+    }
+
+    @PostMapping(value = "/update/type")
+    public ResponseEntity updateType(@RequestBody UpdateVehicleTypeRequest updateVehicleTypeRequest) {
+        return this.vehicleService.updateType(updateVehicleTypeRequest);
     }
 
     @GetMapping(value = "/search")
