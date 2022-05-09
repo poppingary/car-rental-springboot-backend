@@ -16,8 +16,8 @@ public interface VehicleRepository extends CrudRepository<Vehicle, String> {
     Set<Vehicle> findByLocationLocationIdAndIsAvailable(String locationId, String isAvailable);
 
     @Modifying
-    @Query("UPDATE agk_vehicle v SET v.isAvailable = \'N\' WHERE v.vehicleId = :vehicleId")
-    void updateIsAvailable(@Param("vehicleId") String vehicleId);
+    @Query("UPDATE agk_vehicle v SET v.isAvailable = :isAvailable WHERE v.vehicleId = :vehicleId")
+    void updateIsAvailable(@Param("vehicleId") String vehicleId, @Param("isAvailable") String isAvailable);
 
     @Modifying
     @Query("UPDATE agk_vehicle v " +

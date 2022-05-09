@@ -1,19 +1,18 @@
 package agk.wow.carrental.service;
 
+import agk.wow.carrental.constant.DailyMileageUnlimited;
 import agk.wow.carrental.constant.ResponseBodyMessage;
+import agk.wow.carrental.constant.VehicleAvailable;
 import agk.wow.carrental.model.*;
 import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
-import agk.wow.carrental.rpcdomain.request.CorporateRequest;
 import agk.wow.carrental.rpcdomain.request.PaymentRequest;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
-import agk.wow.carrental.rpcdomain.request.UpdateReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -27,6 +26,9 @@ public class ReservationService {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Autowired
+    private ReservationRepository reservationRepository;
+
+    @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
@@ -34,9 +36,6 @@ public class ReservationService {
 
     @Autowired
     private LocationRepository locationRepository;
-
-    @Autowired
-    private ReservationRepository reservationRepository;
 
     @Autowired
     private PaymentRepository paymentRepository;
@@ -56,30 +55,53 @@ public class ReservationService {
     @Transactional
     public ResponseEntity<?> reserveVehicle(ReservationRequest reservationRequest) {
         String reservationId = UUID.randomUUID().toString();
+
+        Reservation reservation = this.saveReservation(reservationRequest, reservationId);
+        this.savePayment(reservationRequest, reservationId, reservation);
+        this.updateVehicleAvailable(reservation);
+
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+    }
+
+    private Reservation saveReservation(ReservationRequest reservationRequest, String reservationId) {
+        Reservation reservation = new Reservation();
+
+        reservation.setReservationId(reservationId);
+        this.copyReservationProperties(reservationRequest, reservation);
+        this.checkIsUnlimitedAndSetDailyMileageLimit(reservationRequest, reservation);
+        this.reservationRepository.save(reservation);
+
+        return reservation;
+    }
+
+    private void copyReservationProperties(ReservationRequest reservationRequest, Reservation reservation) {
         Optional<Customer> customerOptional = this.customerRepository.findById(reservationRequest.getCustomerId());
         Optional<Vehicle> vehicleOptional = this.vehicleRepository.findById(reservationRequest.getVehicleId());
         Optional<Location> pickupLocationOptional = this.locationRepository.findById(reservationRequest.getPickupLocationId());
         Optional<Location> dropOffLocationOptional = this.locationRepository.findById(reservationRequest.getDropOffLocationId());
         LocalDateTime pickupDate = LocalDateTime.parse(reservationRequest.getPickupDate(), FORMATTER);
-        LocalDateTime dropOffDate = LocalDateTime.parse(reservationRequest.getPickupDate(), FORMATTER);
-        List<PaymentRequest> paymentRequests = reservationRequest.getPayments();
+        LocalDateTime dropOffDate = LocalDateTime.parse(reservationRequest.getDropOffDate(), FORMATTER);
 
-        Reservation reservation = new Reservation();
-        reservation.setReservationId(reservationId);
         customerOptional.ifPresent(reservation::setCustomer);
         vehicleOptional.ifPresent(reservation::setVehicle);
         pickupLocationOptional.ifPresent(reservation::setPickupLocation);
         dropOffLocationOptional.ifPresent(reservation::setDropOffLocation);
         reservation.setPickupDate(pickupDate);
         reservation.setDropOffDate(dropOffDate);
+    }
 
-        if (reservationRequest.getIsUnlimited().equals("Y")) {
-            reservation.setDailyMileageLimit(Float.valueOf(-1));
+    private void checkIsUnlimitedAndSetDailyMileageLimit(ReservationRequest reservationRequest, Reservation reservation) {
+        if (reservationRequest.getIsUnlimited().equals(DailyMileageUnlimited.YES.getUnlimitation())) {
+            reservation.setDailyMileageLimit((float) -1);
         } else {
             reservation.setDailyMileageLimit(Float.valueOf(reservationRequest.getDailyMileageLimit()));
         }
+    }
 
+    private void savePayment(ReservationRequest reservationRequest, String reservationId, Reservation reservation) {
+        List<PaymentRequest> paymentRequests = reservationRequest.getPayments();
         List<Payment> payments = new ArrayList<>();
+
         for (PaymentRequest paymentRequest : paymentRequests) {
             Payment payment = new Payment();
             payment.setPaymentId(reservationId);
@@ -91,21 +113,12 @@ public class ReservationService {
             payments.add(payment);
         }
 
-        this.reservationRepository.save(reservation);
+        this.paymentRepository.saveAll(payments);
+    }
 
-        for (Payment payment : payments) {
-            this.paymentRepository.save(payment);
-        }
+    private void updateVehicleAvailable(Reservation reservation) {
+        String vehicleId = reservation.getVehicle().getVehicleId();
 
-        Vehicle vehicle = null;
-        if (vehicleOptional.isPresent()) {
-            vehicle = vehicleOptional.get();
-        }
-        if (ObjectUtils.isEmpty(vehicle)) {
-            return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.NO_VEHICLE.getMessage()), HttpStatus.BAD_REQUEST);
-        }
-        this.vehicleRepository.updateIsAvailable(vehicle.getVehicleId());
-
-        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        this.vehicleRepository.updateIsAvailable(vehicleId, VehicleAvailable.NO.getAvailable());
     }
 }
