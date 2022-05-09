@@ -20,12 +20,12 @@ public class CouponController {
     }
 
     @PostMapping(value = "/add/coupon")
-    public ResponseEntity<?> addCorporate(@RequestBody CouponRequest couponRequest) {
+    public ResponseEntity<?> addCoupon(@RequestBody CouponRequest couponRequest) {
         return this.couponService.addCoupon(couponRequest);
     }
 
     @PostMapping(value = "/update/coupon")
-    public ResponseEntity<?> updateCorporate(@RequestBody UpdateCouponRequest updateCouponRequest) {
+    public ResponseEntity<?> updateCoupon(@RequestBody UpdateCouponRequest updateCouponRequest) {
         return this.couponService.updateCoupon(updateCouponRequest);
     }
 
