@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReservationRepository extends CrudRepository<Reservation, String> {
-
+    Reservation findReservationByCustomerId(String customerId);
 }

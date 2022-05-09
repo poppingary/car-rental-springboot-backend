@@ -45,6 +45,12 @@ public class ReservationService {
         return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), reservations), HttpStatus.OK);
     }
 
+    public ResponseEntity<?> getReservation(String customerId) {
+        Reservation reservation = this.reservationRepository.findReservationByCustomerId(customerId);
+
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), reservation), HttpStatus.OK);
+    }
+
     @Transactional
     public ResponseEntity<?> reserveVehicle(ReservationRequest reservationRequest) {
         String reservationId = UUID.randomUUID().toString();

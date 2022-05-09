@@ -18,6 +18,11 @@ public class ReservationController {
         return this.reservationService.getReservations();
     }
 
+    @GetMapping(value = "/get/reservation")
+    public ResponseEntity<?> getReservation(@RequestParam String customerId) {
+        return this.reservationService.getReservation(customerId);
+    }
+
     @PostMapping(value = "/reserve/vehicle")
     public ResponseEntity<?> reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
         return this.reservationService.reserveVehicle(reservationRequest);
