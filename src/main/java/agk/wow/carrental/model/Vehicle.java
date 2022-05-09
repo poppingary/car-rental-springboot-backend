@@ -27,8 +27,7 @@ public class Vehicle {
     @Column(name = "is_available", nullable = false, length = 1)
     private String isAvailable;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
 

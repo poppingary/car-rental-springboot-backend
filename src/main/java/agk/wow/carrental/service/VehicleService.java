@@ -81,6 +81,12 @@ public class VehicleService {
         return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), types), HttpStatus.OK);
     }
 
+    public ResponseEntity getTypeByVehicleTypeId(String vehicleTypeId) {
+        VehicleType vehicleType = this.vehicleTypeRepository.findById(vehicleTypeId).get();
+
+        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicleType), HttpStatus.OK);
+    }
+
     @Transactional
     public ResponseEntity addType(VehicleTypeRequest vehicleTypeRequest) {
         VehicleType newVehicleType = new VehicleType();

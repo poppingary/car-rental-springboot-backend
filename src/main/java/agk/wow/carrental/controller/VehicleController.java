@@ -50,6 +50,11 @@ public class VehicleController {
         return this.vehicleService.getTypes();
     }
 
+    @GetMapping(value = "/get/type/by/vehicleTypeId")
+    public ResponseEntity<?> getTypeByVehicleTypeId(@RequestParam String vehicleTypeId) {
+        return this.vehicleService.getTypeByVehicleTypeId(vehicleTypeId);
+    }
+
     @PostMapping(value = "/add/type")
     public ResponseEntity<?> addType(@RequestBody VehicleTypeRequest vehicleTypeRequest) {
         return this.vehicleService.addType(vehicleTypeRequest);
