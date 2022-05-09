@@ -36,4 +36,9 @@ public class CustomerController {
     public ResponseEntity<?> updateCredential(@RequestBody UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
         return this.userService.updateCustomerCredential(updateCustomerCredentialRequest);
     }
+
+    @GetMapping(value = "/get/customer")
+    public ResponseEntity<?> getCustomerByCustomerId(@RequestParam String customerId) {
+        return this.userService.getCustomerByCustomerId(customerId);
+    }
 }

@@ -198,6 +198,16 @@ public class UserService implements UserDetailsService {
 		return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}
 
+	public ResponseEntity<?> getCustomerByCustomerId(String customerId) {
+		Optional<Customer> customerOptional = this.customerRepository.findById(customerId);
+		Customer customer = null;
+		if (customerOptional.isPresent()) {
+			customer = customerOptional.get();
+		}
+
+		return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), customer)), HttpStatus.OK);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		Customer customer = this.customerRepository.findByEmail(email);
