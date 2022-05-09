@@ -13,6 +13,11 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    @GetMapping(value = "/get/reservations")
+    public ResponseEntity<?> getReservations() {
+        return this.reservationService.getReservations();
+    }
+
     @PostMapping(value = "/reserve/vehicle")
     public ResponseEntity<?> reserveVehicle(@RequestBody ReservationRequest reservationRequest) {
         return this.reservationService.reserveVehicle(reservationRequest);

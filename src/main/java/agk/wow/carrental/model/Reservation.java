@@ -1,16 +1,14 @@
 package agk.wow.carrental.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity(name = "agk_reservation")
 public class Reservation {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "reservation_id")
     private String reservationId;
 
@@ -26,28 +24,28 @@ public class Reservation {
     @Column(name = "end_odometer", precision = 10, scale = 2)
     private Float endOdometer;
 
-    @Column(name = "daily_mileage_limit", precision = 10, scale = 2)
+    @Column(name = "daily_mileage_limit", precision = 10, scale = 2, nullable = false)
     private Float dailyMileageLimit;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "pickup_location", nullable = false)
     private Location pickupLocation;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "drop_off_location", nullable = false)
     private Location dropOffLocation;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
+    private Set<Payment> payments;
 
     public String getReservationId() {
         return reservationId;
@@ -127,5 +125,13 @@ public class Reservation {
 
     public void setDropOffLocation(Location dropOffLocation) {
         this.dropOffLocation = dropOffLocation;
+    }
+
+    public Set<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(Set<Payment> payments) {
+        this.payments = payments;
     }
 }

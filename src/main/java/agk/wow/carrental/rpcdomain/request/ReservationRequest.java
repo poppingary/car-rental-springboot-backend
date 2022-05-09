@@ -1,5 +1,7 @@
 package agk.wow.carrental.rpcdomain.request;
 
+import java.util.List;
+
 public class ReservationRequest {
     private String pickupDate;
     private String dropOffDate;
@@ -10,6 +12,9 @@ public class ReservationRequest {
     private String vehicleId;
     private String pickupLocationId;
     private String dropOffLocationId;
+    private String isUnlimited;
+    private String couponCode;
+    private List<PaymentRequest> payments;
 
     public String getPickupDate() {
         return pickupDate;
@@ -81,5 +86,29 @@ public class ReservationRequest {
 
     public void setDropOffLocationId(String dropOffLocationId) {
         this.dropOffLocationId = dropOffLocationId;
+    }
+
+    public String getIsUnlimited() {
+        return isUnlimited;
+    }
+
+    public void setIsUnlimited(String isUnlimited) {
+        this.isUnlimited = isUnlimited;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
+    public List<PaymentRequest> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<PaymentRequest> payments) {
+        this.payments = payments;
     }
 }
