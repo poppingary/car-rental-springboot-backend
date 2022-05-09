@@ -4,8 +4,10 @@ import agk.wow.carrental.constant.ResponseBodyMessage;
 import agk.wow.carrental.model.*;
 import agk.wow.carrental.repository.*;
 import agk.wow.carrental.rpcdomain.ResponseBody;
+import agk.wow.carrental.rpcdomain.request.CorporateRequest;
 import agk.wow.carrental.rpcdomain.request.PaymentRequest;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
+import agk.wow.carrental.rpcdomain.request.UpdateReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +75,8 @@ public class ReservationService {
 
         if (reservationRequest.getIsUnlimited().equals("Y")) {
             reservation.setDailyMileageLimit(Float.valueOf(-1));
+        } else {
+            reservation.setDailyMileageLimit(Float.valueOf(reservationRequest.getDailyMileageLimit()));
         }
 
         List<Payment> payments = new ArrayList<>();
