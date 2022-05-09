@@ -1,9 +1,18 @@
 package agk.wow.carrental.rpcdomain.request;
 
 public class CouponRequest {
+    private String couponCode;
     private String startDate;
     private String expiredDate;
     private String discountPercentage;
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
 
     public String getStartDate() {
         return startDate;

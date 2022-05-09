@@ -11,9 +11,7 @@ import java.time.LocalDateTime;
 @Entity(name = "agk_coupon")
 public class Coupon {
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "coupon_code")
+    @Column(name = "coupon_code", length = 20)
     private String couponCode;
 
     @Column(name = "start_date")

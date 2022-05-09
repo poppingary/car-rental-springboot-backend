@@ -31,6 +31,7 @@ public class CouponService {
     @Transactional
     public ResponseEntity<?> addCoupon(CouponRequest couponRequest) {
         Coupon newCoupon = new Coupon();
+        newCoupon.setCouponCode(couponRequest.getCouponCode());
         newCoupon.setStartDate(LocalDateTime.parse(couponRequest.getStartDate(), FORMATTER));
         newCoupon.setExpiredDate(LocalDateTime.parse(couponRequest.getExpiredDate(), FORMATTER));
         newCoupon.setDiscountPercentage(Float.valueOf(couponRequest.getDiscountPercentage()));
