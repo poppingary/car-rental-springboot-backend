@@ -8,10 +8,6 @@ public class ResponseBody<T> implements Serializable {
     String message;
     T data;
 
-    public ResponseBody() {
-
-    }
-
     public ResponseBody(String message) {
         this.message = message;
     }

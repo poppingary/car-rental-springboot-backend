@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -31,64 +32,76 @@ public class VehicleService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public ResponseEntity getVehicles() {
+    public ResponseEntity<?> getVehicles() {
         Iterable<Vehicle> vehicles = this.vehicleRepository.findAll();
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity addVehicle(VehicleRequest vehicleRequest) {
+    public ResponseEntity<?> addVehicle(VehicleRequest vehicleRequest) {
         Vehicle newVehicle = new Vehicle();
         BeanUtils.copyProperties(vehicleRequest, newVehicle);
-        VehicleType vehicleType = this.vehicleTypeRepository.findById(vehicleRequest.getVehicleTypeId()).get();
-        Location location = this.locationRepository.findById(vehicleRequest.getLocationId()).get();
+        Optional<VehicleType> vehicleType = this.vehicleTypeRepository.findById(vehicleRequest.getVehicleTypeId());
+        Optional<Location> location = this.locationRepository.findById(vehicleRequest.getLocationId());
 
         newVehicle.setIsAvailable(IS_AVAILABLE);
-        newVehicle.setVehicleType(vehicleType);
-        newVehicle.setLocation(location);
+        vehicleType.ifPresent(newVehicle::setVehicleType);
+        location.ifPresent(newVehicle::setLocation);
 
         this.vehicleRepository.save(newVehicle);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity updateVehicle(VehicleRequest vehicleRequest) {
+    public ResponseEntity<?> updateVehicle(VehicleRequest vehicleRequest) {
         String vehicleId = vehicleRequest.getVehicleId();
         String brand = vehicleRequest.getBrand();
         String licensePlate = vehicleRequest.getLicensePlate();
         String model = vehicleRequest.getModel();
         String year = vehicleRequest.getYear();
-        VehicleType vehicleType = this.vehicleTypeRepository.findById(vehicleRequest.getVehicleTypeId()).get();
-        Location location = this.locationRepository.findById(vehicleRequest.getLocationId()).get();
+        Optional<VehicleType> vehicleTypeOptional = this.vehicleTypeRepository.findById(vehicleRequest.getVehicleTypeId());
+        VehicleType vehicleType = null;
+        if (vehicleTypeOptional.isPresent()) {
+            vehicleType = vehicleTypeOptional.get();
+        }
+        Optional<Location> locationOptional = this.locationRepository.findById(vehicleRequest.getLocationId());
+        Location location = null;
+        if (locationOptional.isPresent()) {
+            location = locationOptional.get();
+        }
 
         this.vehicleRepository.updateVehicle(vehicleId, brand, licensePlate, model, year, location, vehicleType);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity deleteVehicle(String vehicleId) {
+    public ResponseEntity<?> deleteVehicle(String vehicleId) {
         this.vehicleRepository.deleteById(vehicleId);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
-    public ResponseEntity getTypes() {
+    public ResponseEntity<?> getTypes() {
         Iterable<VehicleType> types = this.vehicleTypeRepository.findAll();
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), types), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), types), HttpStatus.OK);
     }
 
-    public ResponseEntity getTypeByVehicleTypeId(String vehicleTypeId) {
-        VehicleType vehicleType = this.vehicleTypeRepository.findById(vehicleTypeId).get();
+    public ResponseEntity<?> getTypeByVehicleTypeId(String vehicleTypeId) {
+        Optional<VehicleType> vehicleTypeOptional = this.vehicleTypeRepository.findById(vehicleTypeId);
+        VehicleType vehicleType = null;
+        if (vehicleTypeOptional.isPresent()) {
+            vehicleType = vehicleTypeOptional.get();
+        }
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicleType), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicleType), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity addType(VehicleTypeRequest vehicleTypeRequest) {
+    public ResponseEntity<?> addType(VehicleTypeRequest vehicleTypeRequest) {
         VehicleType newVehicleType = new VehicleType();
         newVehicleType.setExcessMileageFee(Float.valueOf(vehicleTypeRequest.getExcessMileageFee()));
         newVehicleType.setServiceRate(Float.valueOf(vehicleTypeRequest.getServiceRate()));
@@ -96,11 +109,11 @@ public class VehicleService {
 
         this.vehicleTypeRepository.save(newVehicleType);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity updateType(UpdateVehicleTypeRequest updateVehicleTypeRequest) {
+    public ResponseEntity<?> updateType(UpdateVehicleTypeRequest updateVehicleTypeRequest) {
         String vehicleTypeId = updateVehicleTypeRequest.getVehicleTypeId();
         Float excessMileageFee = Float.valueOf(updateVehicleTypeRequest.getExcessMileageFee());
         Float serviceRate = Float.valueOf(updateVehicleTypeRequest.getServiceRate());
@@ -108,25 +121,29 @@ public class VehicleService {
 
         this.vehicleTypeRepository.updateVehicleType(vehicleTypeId, excessMileageFee, serviceRate, vehicleType);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity deleteType(String vehicleTypeId) {
+    public ResponseEntity<?> deleteType(String vehicleTypeId) {
         this.vehicleTypeRepository.deleteById(vehicleTypeId);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
-    public ResponseEntity getVehicleByLocation(String locationId) {
+    public ResponseEntity<?> getVehicleByLocation(String locationId) {
         Set<Vehicle> vehicles = this.vehicleRepository.findByLocationLocationIdAndIsAvailable(locationId, IS_AVAILABLE);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicles), HttpStatus.OK);
     }
 
-    public ResponseEntity getVehicleByVehicleId(String vehicleId) {
-        Vehicle vehicle = this.vehicleRepository.findById(vehicleId).get();
+    public ResponseEntity<?> getVehicleByVehicleId(String vehicleId) {
+        Optional<Vehicle> vehicleOptional = this.vehicleRepository.findById(vehicleId);
+        Vehicle vehicle = null;
+        if (vehicleOptional.isPresent()) {
+            vehicle = vehicleOptional.get();
+        }
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicle), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), vehicle), HttpStatus.OK);
     }
 }

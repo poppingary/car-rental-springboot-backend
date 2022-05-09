@@ -13,34 +13,40 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 public class LocationService {
     @Autowired
     private LocationRepository locationRepository;
 
-    public ResponseEntity getLocationByLocationId(String locationId) {
-        Location location = this.locationRepository.findById(locationId).get();
+    public ResponseEntity<?> getLocationByLocationId(String locationId) {
+        Optional<Location> locationOptional = this.locationRepository.findById(locationId);
+        Location location = null;
+        if (locationOptional.isPresent()) {
+            location = locationOptional.get();
+        }
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), location), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), location), HttpStatus.OK);
     }
 
-    public ResponseEntity getLocations() {
+    public ResponseEntity<?> getLocations() {
         Iterable<Location> locations = this.locationRepository.findAll();
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), locations), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), locations), HttpStatus.OK);
     }
 
-    public ResponseEntity addLocation(LocationRequest locationRequest) {
+    public ResponseEntity<?> addLocation(LocationRequest locationRequest) {
         Location newLocation = new Location();
         BeanUtils.copyProperties(locationRequest, newLocation);
 
         this.locationRepository.save(newLocation);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity updateLocation(UpdateLocationRequest updateLocationRequest) {
+    public ResponseEntity<?> updateLocation(UpdateLocationRequest updateLocationRequest) {
         Location location = new Location();
         BeanUtils.copyProperties(updateLocationRequest, location);
 
@@ -53,13 +59,13 @@ public class LocationService {
         String zipcode = updateLocationRequest.getZipcode();
         this.locationRepository.updateLocation(locationId, locationName, phoneNumber, street, city, state, zipcode);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity deleteLocation(String locationId) {
+    public ResponseEntity<?> deleteLocation(String locationId) {
         this.locationRepository.deleteById(locationId);
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 }

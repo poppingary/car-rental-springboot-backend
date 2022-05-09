@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -45,7 +46,7 @@ public class UserService implements UserDetailsService {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	public ResponseEntity register(RegisterRequest registerRequest, UserType userType) {
+	public ResponseEntity<?> register(RegisterRequest registerRequest, UserType userType) {
 		switch(userType) {
 			case CUSTOMER:
 				CustomerRegisterRequest customerRegisterRequest = (CustomerRegisterRequest) registerRequest;
@@ -72,7 +73,7 @@ public class UserService implements UserDetailsService {
 				break;
 		}
 
-		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
 	}
 
 	private boolean isCustomerRegistered(Customer customer) {
@@ -83,7 +84,7 @@ public class UserService implements UserDetailsService {
 		return !ObjectUtils.isEmpty(this.employeeRepository.findByEmail(employee.getEmail()));
 	}
 
-	public ResponseEntity login(JwtRequest jwtRequest) throws Exception {
+	public ResponseEntity<?> login(JwtRequest jwtRequest) throws Exception {
 		String email = jwtRequest.getEmail();
 		String password = jwtRequest.getPassword();
 
@@ -106,7 +107,7 @@ public class UserService implements UserDetailsService {
 			jwtResponse.setLastName(employee.getLastName());
 		}
 
-		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), jwtResponse), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage(), jwtResponse), HttpStatus.OK);
 	}
 
 	private void authenticate(String email, String password) throws Exception {
@@ -120,7 +121,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public ResponseEntity updateIndividualCustomer(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
+	public ResponseEntity<?> updateIndividualCustomer(UpdateIndividualCustomerRequest updateIndividualCustomerRequest) {
 		String customerId = updateIndividualCustomerRequest.getCustomerId();
 		String firstName = updateIndividualCustomerRequest.getFirstName();
 		String middleName = updateIndividualCustomerRequest. getMiddleName();
@@ -136,11 +137,11 @@ public class UserService implements UserDetailsService {
 
 		this.customerRepository.updateIndividualCustomer(customerId, firstName, middleName, lastName, phoneNumber, street, city, state, zipcode, insuranceCompany, insuranceNumber, driverLicense);
 
-		return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+		return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
 	}
 
 	@Transactional
-	public ResponseEntity updateEmployeeProfile(UpdateEmployeeProfileRequest updateEmployeeProfileRequest) {
+	public ResponseEntity<?> updateEmployeeProfile(UpdateEmployeeProfileRequest updateEmployeeProfileRequest) {
 		String employeeId = updateEmployeeProfileRequest.getEmployeeId();
 		String firstName = updateEmployeeProfileRequest.getFirstName();
 		String middleName = updateEmployeeProfileRequest.getMiddleName();
@@ -148,39 +149,53 @@ public class UserService implements UserDetailsService {
 
 		this.employeeRepository.updateEmployee(employeeId, firstName, middleName, lastName);
 
-		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+		return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}
 
 	@Transactional
-	public ResponseEntity updateCustomerCredential(UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
+	public ResponseEntity<?> updateCustomerCredential(UpdateCustomerCredentialRequest updateCustomerCredentialRequest) {
 		String customerId = updateCustomerCredentialRequest.getCustomerId();
 		String currentPassword = updateCustomerCredentialRequest.getCurrentPassword();
 		String newPassword = this.bcryptEncoder.encode(updateCustomerCredentialRequest.getNewPassword());
 
-		Customer customer = this.customerRepository.findById(customerId).get();
+		Optional<Customer> customerOptional = this.customerRepository.findById(customerId);
+		Customer customer = null;
+		if (customerOptional.isPresent()) {
+			customer = customerOptional.get();
+		}
+		if (ObjectUtils.isEmpty(customer)) {
+			return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.NO_CUSTOMER.getMessage())), HttpStatus.BAD_REQUEST);
+		}
 		if (!this.bcryptEncoder.matches(currentPassword, customer.getPassword())) {
-			return new ResponseEntity((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
 		}
 
 		this.customerRepository.updateCredential(customerId, newPassword);
 
-		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+		return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}
 
 	@Transactional
-	public ResponseEntity updateEmployeeCredential(UpdateEmployeeCredentialRequest updateEmployeeCredentialRequest) {
+	public ResponseEntity<?> updateEmployeeCredential(UpdateEmployeeCredentialRequest updateEmployeeCredentialRequest) {
 		String employeeId = updateEmployeeCredentialRequest.getEmployeeId();
 		String currentPassword = updateEmployeeCredentialRequest.getCurrentPassword();
 		String newPassword = this.bcryptEncoder.encode(updateEmployeeCredentialRequest.getNewPassword());
 
-		Employee employee = this.employeeRepository.findById(employeeId).get();
+		Optional<Employee> employeeOptional = this.employeeRepository.findById(employeeId);
+		Employee employee = null;
+		if (employeeOptional.isPresent()) {
+			employee = employeeOptional.get();
+		}
+		if (ObjectUtils.isEmpty(employee)) {
+			return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.NO_CUSTOMER.getMessage())), HttpStatus.BAD_REQUEST);
+		}
 		if (!this.bcryptEncoder.matches(currentPassword, employee.getPassword())) {
-			return new ResponseEntity((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.PASSWORD_NOT_MATCH.getMessage())), HttpStatus.BAD_REQUEST);
 		}
 
 		this.employeeRepository.updateCredential(employeeId, newPassword);
 
-		return new ResponseEntity((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
+		return new ResponseEntity<>((new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage())), HttpStatus.OK);
 	}
 
 	@Override

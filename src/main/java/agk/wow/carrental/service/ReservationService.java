@@ -12,7 +12,6 @@ import agk.wow.carrental.repository.VehicleRepository;
 import agk.wow.carrental.rpcdomain.ResponseBody;
 import agk.wow.carrental.rpcdomain.request.ReservationRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -20,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
@@ -38,25 +38,25 @@ public class ReservationService {
     private ReservationRepository reservationRepository;
 
     @Transactional
-    public ResponseEntity reserveVehicle(ReservationRequest reservationRequest) {
-        Customer customer = this.customerRepository.findById(reservationRequest.getCustomerId()).get();
-        Vehicle vehicle = this.vehicleRepository.findById(reservationRequest.getVehicleId()).get();
-        Location pickupLocation = this.locationRepository.findById(reservationRequest.getPickupLocationId()).get();
-        Location dropOffLocation = this.locationRepository.findById(reservationRequest.getDropOffLocationId()).get();
+    public ResponseEntity<?> reserveVehicle(ReservationRequest reservationRequest) {
+        Optional<Customer> customerOptional = this.customerRepository.findById(reservationRequest.getCustomerId());
+        Optional<Vehicle> vehicleOptional = this.vehicleRepository.findById(reservationRequest.getVehicleId());
+        Optional<Location> pickupLocationOptional = this.locationRepository.findById(reservationRequest.getPickupLocationId());
+        Optional<Location> dropOffLocationOptional = this.locationRepository.findById(reservationRequest.getDropOffLocationId());
         LocalDateTime pickupDate = LocalDateTime.parse(reservationRequest.getPickupDate(), FORMATTER);
         LocalDateTime dropOffDate = LocalDateTime.parse(reservationRequest.getPickupDate(), FORMATTER);
 
         Reservation reservation = new Reservation();
-        reservation.setCustomer(customer);
-        reservation.setVehicle(vehicle);
-        reservation.setPickupLocation(pickupLocation);
-        reservation.setDropOffLocation(dropOffLocation);
+        customerOptional.ifPresent(reservation::setCustomer);
+        vehicleOptional.ifPresent(reservation::setVehicle);
+        pickupLocationOptional.ifPresent(reservation::setPickupLocation);
+        dropOffLocationOptional.ifPresent(reservation::setDropOffLocation);
         reservation.setPickupDate(pickupDate);
         reservation.setDropOffDate(dropOffDate);
 
         this.reservationRepository.save(reservation);
-        this.vehicleRepository.updateIsAvailable(vehicle.getVehicleId());
+        this.vehicleRepository.updateIsAvailable(vehicleOptional.get().getVehicleId());
 
-        return new ResponseEntity(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseBody(ResponseBodyMessage.SUCCESS.getMessage()), HttpStatus.OK);
     }
 }
